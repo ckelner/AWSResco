@@ -1,2 +1,5 @@
 # js-aws-reservations-comparison
-a standalone js SPA using the AWS JS SDK to get instance and reservation info
+A standalone JS SPA using the AWS JS SDK to get instance and reservation info.
+
+## Development
+Run with: `sudo python -m SimpleHTTPServer`
