@@ -1,2 +1,2 @@
 # js-aws-reservations-comparison
-a standalone js SPA using the AWS JS SDK to get instance and reservation info
+A standalone AngularJS SPA using the AWS JS SDK to get instance and reservation info
