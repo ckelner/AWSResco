@@ -22,17 +22,23 @@
       </h1>
     </div>
     <div class="row">
-      <div class="col-md-4 col-margin-left-25">
+      <div class="col-md-4">
         <div class="form-group">
           <label for="awsAccessKey">AWS Access Key</label>
           <input type="text" class="form-control" id="awsAccessKey" placeholder="AWS Access Key">
         </div>
+      </div>
+      <div class="col-md-4">
         <div class="form-group">
           <label for="awsSecretKey">AWS Secret Key</label>
           <input type="password" class="form-control" id="awsSecretKey" placeholder="AWS Secret Key">
         </div>
+      </div>
+      <div class="col-md-2 col-padding-top-25-left-25">
         <button id="awsQueryButton" type="submit" class="btn btn-success">Submit</button>
       </div>
+    </div>
+    <div class="row" id="awsQueryResults">
     </div>
   </div>
   </div>

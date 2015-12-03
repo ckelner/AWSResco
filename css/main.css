@@ -4,7 +4,8 @@ body {
 .page-header {
   margin-top: 1px !important;
 }
-.col-margin-left-25 {
+.col-padding-top-25-left-25 {
+  margin-top: 25px !important;
   margin-left: 25px !important;
 }
 h1 a:hover {
