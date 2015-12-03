@@ -1,0 +1,11 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Chris Kelner - Twitter: @kelner - GitHub: @ckelner
+
+# TECHNOLOGY COLOPHON
+
+    CSS3, HTML5
+    AngularJS, Modernizr, Normalize.css
