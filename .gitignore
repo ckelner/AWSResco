@@ -34,3 +34,5 @@ node_modules
 .npm
 
 # Optional REPL history
+
+app/.bowerrc
