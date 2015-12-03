@@ -4,3 +4,6 @@ body {
 .page-header {
   margin-top: 1px !important;
 }
+.col-margin-left-25 {
+  margin-left: 25px !important;
+}

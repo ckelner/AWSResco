@@ -1,5 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -20,9 +21,25 @@
         <small>An AWS Reservation Comparison tool</small>
       </h1>
     </div>
+    <div class="row">
+      <div class="col-md-6 col-margin-left-25">
+        <form onsubmit="awsQuery()">
+          <div class="form-group">
+            <label for="awsAccessKey">AWS Access Key</label>
+            <input type="email" class="form-control" id="awsAccessKey" placeholder="AWS Access Key">
+          </div>
+          <div class="form-group">
+            <label for="awsSecretKey">AWS Secret Key</label>
+            <input type="password" class="form-control" id="awsSecretKey" placeholder="AWS Secret Key">
+          </div>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
   </div>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.20.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>
