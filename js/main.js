@@ -1,4 +1,5 @@
 // AWS.config.update({accessKeyId: 'akid', secretAccessKey: 'secret'});
-function awsQuery() {
-  
+function awsQuery(access, secret) {
+  alert(access);
+  alert(secret);
 }

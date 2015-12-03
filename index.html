@@ -23,10 +23,10 @@
     </div>
     <div class="row">
       <div class="col-md-6 col-margin-left-25">
-        <form onsubmit="awsQuery()">
+        <form onsubmit="awsQuery(this.awsAccessKey.value, this.awsSecretKey.value); return false;">
           <div class="form-group">
             <label for="awsAccessKey">AWS Access Key</label>
-            <input type="email" class="form-control" id="awsAccessKey" placeholder="AWS Access Key">
+            <input type="text" class="form-control" id="awsAccessKey" placeholder="AWS Access Key">
           </div>
           <div class="form-group">
             <label for="awsSecretKey">AWS Secret Key</label>
