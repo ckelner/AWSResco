@@ -11,3 +11,6 @@ body {
 h1 a:hover {
   text-decoration: none !important;
 }
+#awsQueryResults{
+  display: none;
+}

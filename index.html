@@ -41,12 +41,34 @@
     </div>
     <div class="row">
       <div class="col-md-12" id="awsQueryResults">
+        <table class="table table-condensed sortable-theme-bootstrap table-striped table-hove" data-sortable>
+          <thead>
+            <tr>
+              <th>
+                ID
+              </th>
+              <th>
+                Name
+              </th>
+              <th>
+                Type
+              </th>
+              <th>
+                Region
+              </th>
+            </tr>
+          </thead>
+          <tbody id="ec2DataTableBody">
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
   </div>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.20.min.js"></script>
   <script src="js/sortable.min.js"></script>
+  <script src="js/aws.js"></script>
+  <script src="js/dom.js"></script>
   <script src="js/main.js"></script>
 </body>
 

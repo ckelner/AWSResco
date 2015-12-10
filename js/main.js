@@ -8,6 +8,19 @@ function init() {
   });
 }
 
+function getAccessKeyValue() {
+  return document.getElementById('awsAccessKey').value;
+}
+
+function getSecretKeyValue() {
+  return document.getElementById('awsSecretKey').value;
+}
+
 function awsQueryButtonAction() {
-  queryAWS();
+  queryAllAWSRegionsForEC2Data(
+    getAccessKeyValue(),
+    getSecretKeyValue()
+  );
+  // always return false to avoid page refresh
+  return false;
 }
