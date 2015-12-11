@@ -101,6 +101,7 @@ function mungeEc2Data(data) {
         console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[0].InstanceId)
       }
     }
+    mungedDataArr[i] = {};
     mungedDataArr[i]["name"] = name;
     mungedDataArr[i]["id"] = data.Reservations[i].Instances[0].InstanceId;
     mungedDataArr[i]["type"] = data.Reservations[i].Instances[0].InstanceType;
