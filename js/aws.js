@@ -105,7 +105,7 @@ function mungeEc2Data(data) {
     mungedDataArr[i]["name"] = name;
     mungedDataArr[i]["id"] = data.Reservations[i].Instances[0].InstanceId;
     mungedDataArr[i]["type"] = data.Reservations[i].Instances[0].InstanceType;
-    mungedDataArr[i]["region"] = region;
+    mungedDataArr[i]["az"] = data.Reservations[i].Instances[0].Placement.AvailabilityZone;
   }
   return mungedDataArr;
 }
