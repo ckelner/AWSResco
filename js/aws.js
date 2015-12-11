@@ -36,10 +36,6 @@ function waitForEC2ToGetReturned() {
   }
 }
 
-function queryAWSReturn(regionData) {
-  g_EC2Data.concat( mungeEc2Data(regionData) );
-}
-
 function queryAWS(region, key, secret) {
   var ec2 = new AWS.EC2(
     {
@@ -64,9 +60,19 @@ function queryAWS(region, key, secret) {
       resultsDiv.innerHTML = "<b><font color='red'>The following error has occured: " +
         err + "; see the javascript console for more details.";
     } else {
-      queryAWSReturn( data );
+      //console.log(data);
+      queryAWSReturn( data, region );
     }
   });
+}
+
+function queryAWSReturn(regionData, region) {
+  g_EC2Data.push(
+    {
+      "region": region,
+      "data": mungeEc2Data(regionData)
+    }
+  );
 }
 
 function mungeEc2Data(data) {
