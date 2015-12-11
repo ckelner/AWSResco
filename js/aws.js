@@ -84,7 +84,7 @@ function mungeEc2Data(data) {
   for(var i=0; i < dataLen; i++) {
     var tags = data.Reservations[i].Instances[0].Tags;
     var name = "";
-    if(tags.length > 0) {
+    if(tags.length > 1) {
       var tagLen = tags.length;
       for(var y=0; y < tagLen; y++) {
         if(tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
@@ -95,7 +95,11 @@ function mungeEc2Data(data) {
         }
       }
     } else {
-      name = tags[0].Value;
+      if(tags.length == 1) {
+        name = tags[0].Value;
+      } else {
+        console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[0].InstanceId)
+      }
     }
     mungedDataArr[i]["name"] = name;
     mungedDataArr[i]["id"] = data.Reservations[i].Instances[0].InstanceId;
