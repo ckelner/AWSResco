@@ -4,3 +4,8 @@ A standalone SPA using the client side AWS JS SDK to get instance and reservatio
 ## Development
 - Run with: `python -m SimpleHTTPServer`
 - Navigate to: `localhost:8000`
+
+## Screenshots
+
+Work in progress, currently simply lists all instances from all regions:
+![img](readme-assets/images/WIP_dev-2015.png)
