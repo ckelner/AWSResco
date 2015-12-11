@@ -8,4 +8,4 @@ A standalone SPA using the client side AWS JS SDK to get instance and reservatio
 ## Screenshots
 
 Work in progress, currently simply lists all instances from all regions:
-![img](readme-assets/images/WIP_dev-2015.png)
+![img](readme-assets/images/WIP_dec-2015.png?raw=true)
