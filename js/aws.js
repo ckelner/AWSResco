@@ -12,7 +12,15 @@ var g_AWSRegions =[
 var g_EC2Data = [];
 var g_EC2DataTimer = null;
 
+function resetAWSValues() {
+  g_EC2Data = [];
+  clearInterval(g_EC2DataTimer);
+  g_EC2DataTimer = null;
+}
+
 function queryAllAWSRegionsForEC2Data(key, secret) {
+  resetEc2DataTable()
+  resetAWSValues();
   for(var i = 0; i < g_AWSRegions.length; i++) {
     queryAWS(g_AWSRegions[i], key, secret);
   }

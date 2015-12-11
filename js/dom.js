@@ -5,6 +5,11 @@ function displayEc2DataTable(data) {
   showAwsQueryResults();
 }
 
+function resetEc2DataTable() {
+  hideAwsQueryResults();
+  getEc2DataTableBody().innerHTML = "";
+}
+
 // TODO: Make this prettier :)
 function buildEc2DataTable(data) {
   var htmlSnippit = "";
