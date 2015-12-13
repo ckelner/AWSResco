@@ -10,6 +10,10 @@ function resetEc2DataTable() {
   getEc2DataTableBody().innerHTML = "";
 }
 
+function showQueryError(htmlSnippit) {
+  getEc2DataTableBody().innerHTML = htmlSnippit;
+}
+
 // TODO: Make this prettier :)
 function buildEc2DataTable(data) {
   var htmlSnippit = "";

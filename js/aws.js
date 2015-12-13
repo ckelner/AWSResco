@@ -19,10 +19,10 @@ function resetAWSValues() {
 }
 
 function queryAllAWSRegionsForEC2Data(key, secret) {
-  resetEc2DataTable()
+  resetEc2DataTable();
   resetAWSValues();
   for(var i = 0; i < g_AWSRegions.length; i++) {
-    queryAWS(g_AWSRegions[i], key, secret);
+    queryAWSforEC2Data(g_AWSRegions[i], key, secret);
   }
   // Because of the asynchronous nature of the AWS SDK calls, we need to
   // wait until all data is returned for all regions before we proceed
@@ -36,7 +36,7 @@ function waitForEC2ToGetReturned() {
   }
 }
 
-function queryAWS(region, key, secret) {
+function queryAWSforEC2Data(region, key, secret, reservations) {
   var ec2 = new AWS.EC2(
     {
       accessKeyId: key,
@@ -45,25 +45,42 @@ function queryAWS(region, key, secret) {
       maxRetries: 5
     }
   );
-  var params = {
-    Filters: [
-      { // only find running instances
-        Name: 'instance-state-name',
-        Values: [ 'running' ]
+  if( !reservations ) {
+    var params = {
+      Filters: [
+        { // only find running instances
+          Name: 'instance-state-name',
+          Values: [ 'running' ]
+        },
+      ],
+      MaxResults: 1000 // max
+    };
+    ec2.describeInstances(params, function(err, data) {
+      handleAWSQueryReturnErr(err, data, region, reservations);
+    });
+  } else {
+    var params = {
+      { // only active reservations
+        Name: 'state',
+        Values: [ 'active' ]
       },
-    ],
-    MaxResults: 1000 // max
-  };
-  ec2.describeInstances(params, function(err, data) {
-    if (err) {
-      console.log(err, err.stack);
-      resultsDiv.innerHTML = "<b><font color='red'>The following error has occured: " +
-        err + "; see the javascript console for more details.";
-    } else {
-      //console.log(data);
-      queryAWSReturn( data, region );
-    }
-  });
+      OfferingType: 'Heavy Utilization | Medium Utilization | Light Utilization | No Upfront | Partial Upfront | All Upfront',
+    };
+    ec2.describeReservedInstances(params, function(err, data) {
+      handleAWSQueryReturnErr(err, data, region, reservations);
+    });
+  }
+}
+
+function handleAWSQueryReturnErr(err, data, region, reservations) {
+  if (err) {
+    console.log(err, err.stack);
+    showQueryError("<b><font color='red'>The following error has occured: " +
+      err + "; see the javascript console for more details.</font></b>");
+  } else {
+    //console.log(data);
+    queryAWSReturn( data, region, reservations );
+  }
 }
 
 function queryAWSReturn(regionData, region) {
