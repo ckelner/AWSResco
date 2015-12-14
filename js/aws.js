@@ -22,7 +22,8 @@ function queryAllAWSRegionsForEC2Data(key, secret) {
   resetEc2DataTable();
   resetAWSValues();
   for(var i = 0; i < g_AWSRegions.length; i++) {
-    queryAWSforEC2Data(g_AWSRegions[i], key, secret);
+    queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
+    queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
   }
   // Because of the asynchronous nature of the AWS SDK calls, we need to
   // wait until all data is returned for all regions before we proceed
@@ -60,11 +61,12 @@ function queryAWSforEC2Data(region, key, secret, reservations) {
     });
   } else {
     var params = {
-      { // only active reservations
-        Name: 'state',
-        Values: [ 'active' ]
-      },
-      OfferingType: 'Heavy Utilization | Medium Utilization | Light Utilization | No Upfront | Partial Upfront | All Upfront',
+      Filters: [
+        { // only active reservations
+          Name: 'state',
+          Values: [ 'active' ]
+        },
+      ],
     };
     ec2.describeReservedInstances(params, function(err, data) {
       handleAWSQueryReturnErr(err, data, region, reservations);
@@ -79,17 +81,47 @@ function handleAWSQueryReturnErr(err, data, region, reservations) {
       err + "; see the javascript console for more details.</font></b>");
   } else {
     //console.log(data);
-    queryAWSReturn( data, region, reservations );
+    queryAWSReturn(data, region, reservations);
   }
 }
 
-function queryAWSReturn(regionData, region) {
-  g_EC2Data.push(
-    {
-      "region": region,
-      "data": mungeEc2Data(regionData)
-    }
-  );
+function queryAWSReturn(regionData, region, reservations) {
+  if(!reservations) {
+    g_EC2Data.push(
+      {
+        "region": region,
+        "data": mungeEc2Data(regionData)
+      }
+    );
+  } else {
+    /* Example:
+    ReservedInstances: Array[9]
+      0: Object
+        AvailabilityZone: "us-east-1a"
+        CurrencyCode: "USD"
+        Duration: 94608000
+        End: Wed Aug 30 2017 19:59:59 GMT-0400 (EDT)
+        FixedPrice: 482.6
+        InstanceCount: 2
+        InstanceTenancy: "default"
+        InstanceType: "c3.large"
+        OfferingType: "Heavy Utilization"
+        ProductDescription: "Linux/UNIX (Amazon VPC)"
+        RecurringCharges: Array[1]
+        0: Object
+        Amount: 0.0209
+        Frequency: "Hourly"
+        __proto__: Object
+        length: 1
+        __proto__: Array[0]
+        ReservedInstancesId: "4357912c-d713-4e73-a1d7-f5253cf46739"
+        Start: Sun Aug 31 2014 20:00:00 GMT-0400 (EDT)
+        State: "active"
+        Tags: Array[0]
+        UsagePrice: 0
+    */
+    console.log(regionData);
+  }
 }
 
 function mungeEc2Data(data) {
