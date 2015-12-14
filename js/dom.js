@@ -2,6 +2,7 @@ function displayEc2DataTable(data) {
   getEc2DataTableBody().innerHTML += buildEc2DataTable(data);
   // let it be sortable :)
   Sortable.init();
+  hidePleaseWaitDiv();
   showAwsQueryResults();
 }
 
@@ -28,6 +29,30 @@ function buildEc2DataTable(data) {
     }
   }
   return htmlSnippit;
+}
+
+function setPleaseWaitDivUpdateInterval() {
+  setInterval(updatePleaseWaitDiv,1000);
+}
+
+function updatePleaseWaitDiv() {
+  if(getPleaseWaitDiv().innerHTML.toLowerCase.indexOf("please wait.....") != -1) {
+    getPleaseWaitDiv().innerHTML += "."
+  } else {
+    getPleaseWaitDiv().innerHTML = "Please Wait"
+  }
+}
+
+function getPleaseWaitDiv() {
+  return document.getElementById("pleaseWait");
+}
+
+function showPleaseWaitDiv() {
+  getPleaseWaitDiv().style.display = "block";
+}
+
+function hidePleaseWaitDiv() {
+  getPleaseWaitDiv().style.display = "none";
 }
 
 function getEc2DataTableBody() {

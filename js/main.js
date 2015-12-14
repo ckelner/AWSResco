@@ -6,6 +6,7 @@ function init() {
   document.getElementById("awsQueryButton").addEventListener("click", function(){
     awsQueryButtonAction();
   });
+  setPleaseWaitDivUpdateInterval();
 }
 
 function getAccessKeyValue() {
@@ -17,6 +18,7 @@ function getSecretKeyValue() {
 }
 
 function awsQueryButtonAction() {
+  showPleaseWaitDiv();
   queryAllAWSRegionsForEC2Data(
     getAccessKeyValue(),
     getSecretKeyValue()

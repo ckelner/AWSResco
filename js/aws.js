@@ -10,6 +10,7 @@ var g_AWSRegions =[
   'sa-east-1'
 ];
 var g_EC2Data = [];
+var g_EC2ResData = [];
 var g_EC2DataTimer = null;
 
 function resetAWSValues() {
@@ -31,9 +32,23 @@ function queryAllAWSRegionsForEC2Data(key, secret) {
 }
 
 function waitForEC2ToGetReturned() {
-  if( g_EC2Data.length == g_AWSRegions.length ) {
+  if( g_EC2Data.length == g_AWSRegions.length &&
+    g_EC2ResData.length == g_AWSRegions.length) {
     clearInterval(g_EC2DataTimer);
-    displayEc2DataTable(g_EC2Data);
+    displayEc2DataTable(
+      combineEC2AndResData(g_EC2Data,g_EC2ResData)
+    );
+  }
+}
+
+function combineEC2AndResData(ec2,res) {
+  var resLen = res.length;
+  var newRes = [];
+  for(var i=0; i<resLen; i++) {
+    var resDataTop = res[i].data;
+    for(var y=0; y<resLen; y++) {
+      var resDataBottom = res[y].data;
+    }
   }
 }
 
@@ -94,34 +109,39 @@ function queryAWSReturn(regionData, region, reservations) {
       }
     );
   } else {
-    /* Example:
-    ReservedInstances: Array[9]
-      0: Object
-        AvailabilityZone: "us-east-1a"
-        CurrencyCode: "USD"
-        Duration: 94608000
-        End: Wed Aug 30 2017 19:59:59 GMT-0400 (EDT)
-        FixedPrice: 482.6
-        InstanceCount: 2
-        InstanceTenancy: "default"
-        InstanceType: "c3.large"
-        OfferingType: "Heavy Utilization"
-        ProductDescription: "Linux/UNIX (Amazon VPC)"
-        RecurringCharges: Array[1]
-        0: Object
-        Amount: 0.0209
-        Frequency: "Hourly"
-        __proto__: Object
-        length: 1
-        __proto__: Array[0]
-        ReservedInstancesId: "4357912c-d713-4e73-a1d7-f5253cf46739"
-        Start: Sun Aug 31 2014 20:00:00 GMT-0400 (EDT)
-        State: "active"
-        Tags: Array[0]
-        UsagePrice: 0
-    */
-    console.log(regionData);
+    g_EC2ResData.push(
+      {
+        "region": region,
+        "data": mungeEc2ResData(regionData)
+      }
+    );
   }
+}
+
+function mungeEc2ResData(data) {
+  var mungedDataArr = [];
+  if( !data || !data.ReservedInstances || data.ReservedInstances.length == 0 ) {
+    return mungedDataArr;
+  }
+  var dataLen = data.ReservedInstances.length;
+  for(var i=0; i < dataLen; i++) {
+    mungedDataArr[i] = {};
+    mungedDataArr[i]["type"] = data.ReservedInstances[i].InstanceType;
+    mungedDataArr[i]["count"] = data.ReservedInstances[i].InstanceCount;
+    mungedDataArr[i]["az"] = data.ReservedInstances[i].AvailabilityZone;
+    mungedDataArr[i]["cost"] = data.ReservedInstances[i].RecurringCharges[0].Amount;
+    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("windows")) {
+      mungedDataArr[i]["windows"] = true;
+    } else {
+      mungedDataArr[i]["windows"] = false;
+    }
+    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("vpc")) {
+      mungedDataArr[i]["vpc"] = true;
+    } else {
+      mungedDataArr[i]["vpc"] = false;
+    }
+  }
+  return mungedDataArr;
 }
 
 function mungeEc2Data(data) {
@@ -155,6 +175,17 @@ function mungeEc2Data(data) {
     mungedDataArr[i]["id"] = data.Reservations[i].Instances[0].InstanceId;
     mungedDataArr[i]["type"] = data.Reservations[i].Instances[0].InstanceType;
     mungedDataArr[i]["az"] = data.Reservations[i].Instances[0].Placement.AvailabilityZone;
+    if(data.Reservations[i].Instances[0].Platform.toLowerCase() == "windows") {
+      mungedDataArr[i]["windows"] = true;
+    } else {
+      mungedDataArr[i]["windows"] = false;
+    }
+    if(data.Reservations[i].Instances[0].VpcId != null &&
+      data.Reservations[i].Instances[0].VpcId != "") {
+      mungedDataArr[i]["vpc"] = true;
+    } else {
+      mungedDataArr[i]["vpc"] = false;
+    }
   }
   return mungedDataArr;
 }
