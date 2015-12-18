@@ -48,6 +48,7 @@ function combineEC2AndResData(ec2,res) {
     var resDataTop = res[i].data;
     for(var y=0; y<resLen; y++) {
       var resDataBottom = res[y].data;
+      // TODO: take relevant data and mash it into the new array
     }
   }
 }
