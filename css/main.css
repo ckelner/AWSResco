@@ -1,13 +1,29 @@
 body {
-  padding-top: 1px !important;
+    padding-top: 1px !important;
 }
 .page-header {
-  margin-top: 1px !important;
+    margin-top: 1px !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 0px !important;
 }
 .col-padding-top-25-left-25 {
-  margin-top: 25px !important;
-  margin-left: 25px !important;
+    margin-top: 25px !important;
+    margin-left: 25px !important;
+}
+h1 {
+    line-height: 0.8 !important;
+    margin-top: 5px !important;
 }
 h1 a:hover {
-  text-decoration: none !important;
+    text-decoration: none !important;
+}
+#awsQueryResults {
+    display: none;
+}
+#pleaseWait {
+    display: none;
+    font-size: 2em;
+}
+#tabDataRunNames {
+    width: 200px;
 }
