@@ -1,6 +1,8 @@
 # AWSResco
 A standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.
 
+http://awsresco.s3-website-us-east-1.amazonaws.com/
+
 ## How it works
 AWS Reservation Comparison (AWSResco) takes a look at AWS reservations for a given account and compares them against running infrastructure.  It combines multiple reservation purchases of the same `Instance Type`, `Availability Zone`, `Platform` (windows or linux), and `VPC` (EC2-Classic or VPC) into a single object, then looks at all running instances and matches them with any reservation based on the same values.
 
