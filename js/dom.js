@@ -22,7 +22,7 @@ function showQueryError(htmlSnippit) {
 function buildEc2DataTable(data) {
   var htmlSnippit = "";
   var dataLen = data.length;
-  for(var i = 0; i < dataLen; i++) {
+  for (var i = 0; i < dataLen; i++) {
     htmlSnippit += "<tr><th scope='row'>" +
       data[i]["count"] +
       "</th><td>" + data[i]["running"] +
@@ -39,11 +39,11 @@ function buildEc2DataTable(data) {
 }
 
 function setPleaseWaitDivUpdateInterval() {
-  g_PleaseWaitIntervalId = setInterval(updatePleaseWaitDiv,1000);
+  g_PleaseWaitIntervalId = setInterval(updatePleaseWaitDiv, 1000);
 }
 
 function updatePleaseWaitDiv() {
-  if(getPleaseWaitDiv().innerHTML.toLowerCase().indexOf("please wait.....") == -1) {
+  if (getPleaseWaitDiv().innerHTML.toLowerCase().indexOf("please wait.....") == -1) {
     getPleaseWaitDiv().innerHTML += "."
   } else {
     getPleaseWaitDiv().innerHTML = "Please Wait"

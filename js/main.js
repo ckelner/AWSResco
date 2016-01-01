@@ -3,7 +3,7 @@ window.onload = function() {
 };
 
 function init() {
-  document.getElementById("awsQueryButton").addEventListener("click", function(){
+  document.getElementById("awsQueryButton").addEventListener("click", function() {
     awsQueryButtonAction();
   });
 }

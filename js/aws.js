@@ -1,4 +1,4 @@
-var g_AWSRegions =[
+var g_AWSRegions = [
   'us-east-1',
   'us-west-1',
   'us-west-2',
@@ -23,7 +23,7 @@ function resetAWSValues() {
 function queryAllAWSRegionsForEC2Data(key, secret) {
   resetEc2DataTable();
   resetAWSValues();
-  for(var i=0; i<g_AWSRegions.length; i++) {
+  for (var i = 0; i < g_AWSRegions.length; i++) {
     queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
     queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
   }
@@ -33,29 +33,29 @@ function queryAllAWSRegionsForEC2Data(key, secret) {
 }
 
 function waitForEC2ToGetReturned() {
-  if( g_EC2Data.length == g_AWSRegions.length &&
+  if (g_EC2Data.length == g_AWSRegions.length &&
     g_EC2ResData.length == g_AWSRegions.length) {
     clearInterval(g_EC2DataTimer);
     displayEc2DataTable(
-      combineEC2AndResData(g_EC2Data,g_EC2ResData)
+      combineEC2AndResData(g_EC2Data, g_EC2ResData)
     );
   }
 }
 
 // takes our custom data object segregated by region and
 // creates one giant array of all data
-function mergeDataFromAllRegions(customRegionDataObj){
+function mergeDataFromAllRegions(customRegionDataObj) {
   var objLen = customRegionDataObj.length;
   var newArr = [];
-  for(var i=0; i<objLen; i++) {
-    Array.prototype.push.apply( newArr, customRegionDataObj[i].data );
+  for (var i = 0; i < objLen; i++) {
+    Array.prototype.push.apply(newArr, customRegionDataObj[i].data);
   }
   return newArr;
 }
 
-function combineEC2AndResData(ec2,res) {
-  ec2 = mergeDataFromAllRegions( ec2 );
-  res = mergeDataFromAllRegions( res );
+function combineEC2AndResData(ec2, res) {
+  ec2 = mergeDataFromAllRegions(ec2);
+  res = mergeDataFromAllRegions(res);
   var resLen = res.length;
   var newRes = [];
   // first
@@ -64,18 +64,18 @@ function combineEC2AndResData(ec2,res) {
   // data by a unique combo of: type, az, windows, and vpc.
   var uniqCount = 0;
   var uniqKeeper = {};
-  for(var i=0; i<resLen; i++) {
+  for (var i = 0; i < resLen; i++) {
     var resDataTop = res[i];
     var uniqResId = resDataTop["type"] + resDataTop["az"] + resDataTop["windows"] + resDataTop["vpc"];
-    if( newRes[uniqResId] == null ) {
+    if (newRes[uniqResId] == null) {
       uniqKeeper[uniqResId] = uniqCount;
       newRes[uniqCount] = resDataTop;
       uniqCount++;
     }
-    for(var y=0; y<resLen; y++) {
+    for (var y = 0; y < resLen; y++) {
       var resDataBottom = res[y];
       // TODO: take relevant data and mash it into the new array
-      if(
+      if (
         resDataTop["type"] == resDataBottom["type"] &&
         resDataTop["az"] == resDataBottom["az"] &&
         resDataTop["windows"] == resDataBottom["windows"] &&
@@ -84,26 +84,26 @@ function combineEC2AndResData(ec2,res) {
       ) {
         // we have the same reservation, just different purchase time
         newRes[uniqKeeper[uniqResId]]["count"] += resDataBottom["count"];
-        Array.prototype.push.apply( newRes[uniqKeeper[uniqResId]]["resIds"], resDataBottom["resIds"] );
+        Array.prototype.push.apply(newRes[uniqKeeper[uniqResId]]["resIds"], resDataBottom["resIds"]);
       }
     }
   }
   // second
   // combine unique reservations with running ec2 instances
   var ec2Len = ec2.length;
-  for(var p=0; p<ec2Len; p++) {
+  for (var p = 0; p < ec2Len; p++) {
     var uniqResLen = newRes.length;
     var ec2Inst = ec2[p];
     var foundRes = false;
-    for(var q=0; q<uniqResLen; q++) {
+    for (var q = 0; q < uniqResLen; q++) {
       var resInst = newRes[q];
-      if( newRes[q]["running"] == null ) {
+      if (newRes[q]["running"] == null) {
         newRes[q]["running"] = 0;
         newRes[q]["running_ids"] = [];
         newRes[q]["running_names"] = [];
         newRes[q]["diff"] = 0 - newRes[q]["count"];
       }
-      if(
+      if (
         ec2Inst["type"] == resInst["type"] &&
         ec2Inst["az"] == resInst["az"] &&
         ec2Inst["windows"] == resInst["windows"] &&
@@ -112,22 +112,22 @@ function combineEC2AndResData(ec2,res) {
         // got a match
         newRes[q]["running"] += 1;
         newRes[q]["diff"] = newRes[q]["count"] - newRes[q]["running"];
-        newRes[q]["running_ids"].push( ec2Inst["id"] );
-        if( ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "" ) {
-          newRes[q]["running_names"].push( ec2Inst["name"] );
+        newRes[q]["running_ids"].push(ec2Inst["id"]);
+        if (ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "") {
+          newRes[q]["running_names"].push(ec2Inst["name"]);
         }
         foundRes = true;
         break; // exit since we found a match
       }
     }
     // if not reservation was found that matched, then add this to collection to report
-    if( foundRes == false ) {
+    if (foundRes == false) {
       var aNewRes = {};
       aNewRes["running"] = 1;
-      aNewRes["running_ids"] = [ ec2Inst["id"] ];
+      aNewRes["running_ids"] = [ec2Inst["id"]];
       aNewRes["running_names"] = [];
-      if( ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "" ) {
-        aNewRes["running_names"].push( ec2Inst["name"] );
+      if (ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "") {
+        aNewRes["running_names"].push(ec2Inst["name"]);
       }
       aNewRes["diff"] = -1;
       aNewRes["resIds"] = [];
@@ -137,29 +137,25 @@ function combineEC2AndResData(ec2,res) {
       aNewRes["cost"] = 0;
       aNewRes["windows"] = ec2Inst["windows"];
       aNewRes["vpc"] = ec2Inst["vpc"];
-      newRes.push( aNewRes );
+      newRes.push(aNewRes);
     }
   }
   return newRes;
 }
 
 function queryAWSforEC2Data(region, key, secret, reservations) {
-  var ec2 = new AWS.EC2(
-    {
-      accessKeyId: key,
-      secretAccessKey: secret,
-      region: region,
-      maxRetries: 5
-    }
-  );
-  if( !reservations ) {
+  var ec2 = new AWS.EC2({
+    accessKeyId: key,
+    secretAccessKey: secret,
+    region: region,
+    maxRetries: 5
+  });
+  if (!reservations) {
     var params = {
-      Filters: [
-        { // only find running instances
-          Name: 'instance-state-name',
-          Values: [ 'running' ]
-        },
-      ],
+      Filters: [{ // only find running instances
+        Name: 'instance-state-name',
+        Values: ['running']
+      }, ],
       MaxResults: 1000 // max
     };
     ec2.describeInstances(params, function(err, data) {
@@ -167,12 +163,10 @@ function queryAWSforEC2Data(region, key, secret, reservations) {
     });
   } else {
     var params = {
-      Filters: [
-        { // only active reservations
-          Name: 'state',
-          Values: [ 'active' ]
-        },
-      ],
+      Filters: [{ // only active reservations
+        Name: 'state',
+        Values: ['active']
+      }, ],
     };
     ec2.describeReservedInstances(params, function(err, data) {
       handleAWSQueryReturnErr(err, data, region, reservations);
@@ -192,42 +186,38 @@ function handleAWSQueryReturnErr(err, data, region, reservations) {
 }
 
 function queryAWSReturn(regionData, region, reservations) {
-  if(!reservations) {
-    g_EC2Data.push(
-      {
-        "region": region,
-        "data": mungeEc2Data(regionData)
-      }
-    );
+  if (!reservations) {
+    g_EC2Data.push({
+      "region": region,
+      "data": mungeEc2Data(regionData)
+    });
   } else {
-    g_EC2ResData.push(
-      {
-        "region": region,
-        "data": mungeEc2ResData(regionData)
-      }
-    );
+    g_EC2ResData.push({
+      "region": region,
+      "data": mungeEc2ResData(regionData)
+    });
   }
 }
 
 function mungeEc2ResData(data) {
   var mungedDataArr = [];
-  if( !data || !data.ReservedInstances || data.ReservedInstances.length == 0 ) {
+  if (!data || !data.ReservedInstances || data.ReservedInstances.length == 0) {
     return mungedDataArr;
   }
   var dataLen = data.ReservedInstances.length;
-  for(var i=0; i < dataLen; i++) {
+  for (var i = 0; i < dataLen; i++) {
     mungedDataArr[i] = {};
-    mungedDataArr[i]["resIds"] = [ data.ReservedInstances[i].ReservedInstancesId ];
+    mungedDataArr[i]["resIds"] = [data.ReservedInstances[i].ReservedInstancesId];
     mungedDataArr[i]["type"] = data.ReservedInstances[i].InstanceType;
     mungedDataArr[i]["count"] = data.ReservedInstances[i].InstanceCount;
     mungedDataArr[i]["az"] = data.ReservedInstances[i].AvailabilityZone;
     mungedDataArr[i]["cost"] = data.ReservedInstances[i].RecurringCharges[0].Amount;
-    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("windows") != -1) {
+    if (data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("windows") != -1) {
       mungedDataArr[i]["windows"] = true;
     } else {
       mungedDataArr[i]["windows"] = false;
     }
-    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("vpc") != -1) {
+    if (data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("vpc") != -1) {
       mungedDataArr[i]["vpc"] = true;
     } else {
       mungedDataArr[i]["vpc"] = false;
@@ -238,42 +228,42 @@ function mungeEc2ResData(data) {
 
 function mungeEc2Data(data) {
   var mungedDataArr = [];
-  if( !data || !data.Reservations || data.Reservations.length == 0 ) {
+  if (!data || !data.Reservations || data.Reservations.length == 0) {
     return mungedDataArr;
   }
   var dataLen = data.Reservations.length;
-  for(var i=0; i < dataLen; i++) {
+  for (var i = 0; i < dataLen; i++) {
     var tags = data.Reservations[i].Instances[0].Tags;
     var name = "";
-    if(tags.length > 1) {
+    if (tags.length > 1) {
       var tagLen = tags.length;
-      for(var y=0; y < tagLen; y++) {
+      for (var y = 0; y < tagLen; y++) {
         try {
-          if(tags[y].Key != null) {
-            if(tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
+          if (tags[y].Key != null) {
+            if (tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
               name = tags[y].Value;
             }
-            if(tags[y].Key.toLowerCase() == "name") {
+            if (tags[y].Key.toLowerCase() == "name") {
               name = tags[y].Value;
             }
           } else {
             try {
               console.log("Tags[" + y + "] empty: " + tags.toString());
-            } catch(e) {
+            } catch (e) {
               console.log("Exception Id 00x1");
             }
           }
-        } catch(e) {
+        } catch (e) {
           console.log("Exception Id 00x3");
         }
       }
     } else {
-      if(tags.length == 1) {
+      if (tags.length == 1) {
         name = tags[0].Value;
       } else {
         try {
           console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[0].InstanceId);
-        } catch(e) {
+        } catch (e) {
           console.log("Exception Id 00x2");
         }
       }
@@ -284,9 +274,8 @@ function mungeEc2Data(data) {
     mungedDataArr[i]["type"] = data.Reservations[i].Instances[0].InstanceType;
     mungedDataArr[i]["az"] = data.Reservations[i].Instances[0].Placement.AvailabilityZone;
     try {
-      if(data.Reservations[i].Instances[0].Platform != undefined
-        && data.Reservations[i].Instances[0].Platform != null ) {
-        if(data.Reservations[i].Instances[0].Platform.toLowerCase() == "windows") {
+      if (data.Reservations[i].Instances[0].Platform != undefined && data.Reservations[i].Instances[0].Platform != null) {
+        if (data.Reservations[i].Instances[0].Platform.toLowerCase() == "windows") {
           mungedDataArr[i]["windows"] = true;
         } else {
           mungedDataArr[i]["windows"] = false;
@@ -295,10 +284,10 @@ function mungeEc2Data(data) {
         // Doesn't have 'Platform' defined, assuming linux
         mungedDataArr[i]["windows"] = false;
       }
-    } catch(e) {
+    } catch (e) {
       console.log("Exception Id 00x4");
     }
-    if(data.Reservations[i].Instances[0].VpcId != null &&
+    if (data.Reservations[i].Instances[0].VpcId != null &&
       data.Reservations[i].Instances[0].VpcId != "") {
       mungedDataArr[i]["vpc"] = true;
     } else {
