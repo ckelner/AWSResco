@@ -23,4 +23,10 @@ Currently AWSResco does not take into account `OfferingType`, it assumed that on
 
 ## Development
 - Run with: `python -m SimpleHTTPServer` (or your favorite web server)
-- Navigate to: `localhost:8000` (or your favorite web server's configuration)
+- Navigate to: `localhost:8000/dev.html` (or your favorite web server's configuration)
+
+## Production build
+- Run `sudo bash build.sh` which will uglify css and javascript
+
+### Build Gaps
+Changes to `dev.html` need to be copied to `index.html` at this time.

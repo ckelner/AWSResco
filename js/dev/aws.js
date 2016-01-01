@@ -123,7 +123,7 @@ function combineEC2AndResData(ec2, res) {
       }
     }
     // if not reservation was found that matched, then add this to collection to report
-    if (foundRes == false) {
+    if (foundRes === false) {
       var aNewRes = {};
       aNewRes["running"] = 1;
       aNewRes["running_ids"] = [ec2Inst["id"]];
