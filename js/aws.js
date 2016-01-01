@@ -15,6 +15,7 @@ var g_EC2DataTimer = null;
 
 function resetAWSValues() {
   g_EC2Data = [];
+  g_EC2ResData = [];
   clearInterval(g_EC2DataTimer);
   g_EC2DataTimer = null;
 }
@@ -22,7 +23,7 @@ function resetAWSValues() {
 function queryAllAWSRegionsForEC2Data(key, secret) {
   resetEc2DataTable();
   resetAWSValues();
-  for(var i = 0; i < g_AWSRegions.length; i++) {
+  for(var i=0; i<g_AWSRegions.length; i++) {
     queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
     queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
   }
@@ -93,13 +94,14 @@ function combineEC2AndResData(ec2,res) {
   for(var p=0; p<ec2Len; p++) {
     var uniqResLen = newRes.length;
     var ec2Inst = ec2[p];
+    var foundRes = false;
     for(var q=0; q<uniqResLen; q++) {
       var resInst = newRes[q];
       if( newRes[q]["running"] == null ) {
         newRes[q]["running"] = 0;
         newRes[q]["running_ids"] = [];
         newRes[q]["running_names"] = [];
-        newRes[q]["diff"] = 0;
+        newRes[q]["diff"] = 0 - newRes[q]["count"];
       }
       if(
         ec2Inst["type"] == resInst["type"] &&
@@ -111,10 +113,31 @@ function combineEC2AndResData(ec2,res) {
         newRes[q]["running"] += 1;
         newRes[q]["diff"] = newRes[q]["count"] - newRes[q]["running"];
         newRes[q]["running_ids"].push( ec2Inst["id"] );
-        if( ec2Inst["name"] != null && ec2Inst["name"] != "" ) {
+        if( ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "" ) {
           newRes[q]["running_names"].push( ec2Inst["name"] );
         }
+        foundRes = true;
+        break; // exit since we found a match
       }
+    }
+    // if not reservation was found that matched, then add this to collection to report
+    if( foundRes == false ) {
+      var aNewRes = {};
+      aNewRes["running"] = 1;
+      aNewRes["running_ids"] = [ ec2Inst["id"] ];
+      aNewRes["running_names"] = [];
+      if( ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "" ) {
+        aNewRes["running_names"].push( ec2Inst["name"] );
+      }
+      aNewRes["diff"] = -1;
+      aNewRes["resIds"] = [];
+      aNewRes["type"] = ec2Inst["type"];
+      aNewRes["count"] = 0;
+      aNewRes["az"] = ec2Inst["az"];
+      aNewRes["cost"] = 0;
+      aNewRes["windows"] = ec2Inst["windows"];
+      aNewRes["vpc"] = ec2Inst["vpc"];
+      newRes.push( aNewRes );
     }
   }
   return newRes;
@@ -199,12 +222,12 @@ function mungeEc2ResData(data) {
     mungedDataArr[i]["count"] = data.ReservedInstances[i].InstanceCount;
     mungedDataArr[i]["az"] = data.ReservedInstances[i].AvailabilityZone;
     mungedDataArr[i]["cost"] = data.ReservedInstances[i].RecurringCharges[0].Amount;
-    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("windows")) {
+    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("windows") != -1) {
       mungedDataArr[i]["windows"] = true;
     } else {
       mungedDataArr[i]["windows"] = false;
     }
-    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("vpc")) {
+    if(data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("vpc") != -1) {
       mungedDataArr[i]["vpc"] = true;
     } else {
       mungedDataArr[i]["vpc"] = false;
@@ -225,18 +248,34 @@ function mungeEc2Data(data) {
     if(tags.length > 1) {
       var tagLen = tags.length;
       for(var y=0; y < tagLen; y++) {
-        if(tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
-          name = tags[y].Value;
-        }
-        if(tags[y].Key.toLowerCase() == "name") {
-          name = tags[y].Value;
+        try {
+          if(tags[y].Key != null) {
+            if(tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
+              name = tags[y].Value;
+            }
+            if(tags[y].Key.toLowerCase() == "name") {
+              name = tags[y].Value;
+            }
+          } else {
+            try {
+              console.log("Tags[" + y + "] empty: " + tags.toString());
+            } catch(e) {
+              console.log("Exception Id 00x1");
+            }
+          }
+        } catch(e) {
+          console.log("Exception Id 00x3");
         }
       }
     } else {
       if(tags.length == 1) {
         name = tags[0].Value;
       } else {
-        console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[0].InstanceId)
+        try {
+          console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[0].InstanceId);
+        } catch(e) {
+          console.log("Exception Id 00x2");
+        }
       }
     }
     mungedDataArr[i] = {};
@@ -244,10 +283,20 @@ function mungeEc2Data(data) {
     mungedDataArr[i]["id"] = data.Reservations[i].Instances[0].InstanceId;
     mungedDataArr[i]["type"] = data.Reservations[i].Instances[0].InstanceType;
     mungedDataArr[i]["az"] = data.Reservations[i].Instances[0].Placement.AvailabilityZone;
-    if(data.Reservations[i].Instances[0].Platform.toLowerCase() == "windows") {
-      mungedDataArr[i]["windows"] = true;
-    } else {
-      mungedDataArr[i]["windows"] = false;
+    try {
+      if(data.Reservations[i].Instances[0].Platform != undefined
+        && data.Reservations[i].Instances[0].Platform != null ) {
+        if(data.Reservations[i].Instances[0].Platform.toLowerCase() == "windows") {
+          mungedDataArr[i]["windows"] = true;
+        } else {
+          mungedDataArr[i]["windows"] = false;
+        }
+      } else {
+        // Doesn't have 'Platform' defined, assuming linux
+        mungedDataArr[i]["windows"] = false;
+      }
+    } catch(e) {
+      console.log("Exception Id 00x4");
     }
     if(data.Reservations[i].Instances[0].VpcId != null &&
       data.Reservations[i].Instances[0].VpcId != "") {

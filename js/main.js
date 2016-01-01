@@ -6,7 +6,6 @@ function init() {
   document.getElementById("awsQueryButton").addEventListener("click", function(){
     awsQueryButtonAction();
   });
-  setPleaseWaitDivUpdateInterval();
 }
 
 function getAccessKeyValue() {

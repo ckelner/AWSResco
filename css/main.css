@@ -22,4 +22,8 @@ h1 a:hover {
 }
 #pleaseWait{
   display: none;
+  font-size: 2em;
+}
+#tabDataRunNames{
+  width: 200px;
 }
