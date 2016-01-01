@@ -8,16 +8,25 @@ function init() {
   });
 }
 
+function validateKeys(val) {
+  if (val == undefined || val == null || val == "") {
+    showAccessSecretErrorDiv();
+    return null;
+  }
+  return val;
+}
+
 function getAccessKeyValue() {
-  return document.getElementById('awsAccessKey').value;
+  return validateKeys(document.getElementById('awsAccessKey').value);
 }
 
 function getSecretKeyValue() {
-  return document.getElementById('awsSecretKey').value;
+  return validateKeys(document.getElementById('awsSecretKey').value);
 }
 
 function awsQueryButtonAction() {
   showPleaseWaitDiv();
+  hideAccessSecretErrorDiv();
   queryAllAWSRegionsForEC2Data(
     getAccessKeyValue(),
     getSecretKeyValue()

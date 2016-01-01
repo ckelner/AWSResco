@@ -64,6 +64,19 @@ function hidePleaseWaitDiv() {
   getPleaseWaitDiv().style.display = "none";
 }
 
+function getAccessSecretErrorDiv() {
+  return document.getElementById("errorAccessSecretKey");
+}
+
+function showAccessSecretErrorDiv() {
+  hidePleaseWaitDiv();
+  getAccessSecretErrorDiv().style.display = "block";
+}
+
+function hideAccessSecretErrorDiv() {
+  getAccessSecretErrorDiv().style.display = "none";
+}
+
 function getEc2DataTableBody() {
   return document.getElementById("ec2DataTableBody");
 }
