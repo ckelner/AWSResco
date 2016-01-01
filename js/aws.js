@@ -21,15 +21,17 @@ function resetAWSValues() {
 }
 
 function queryAllAWSRegionsForEC2Data(key, secret) {
-  resetEc2DataTable();
-  resetAWSValues();
-  for (var i = 0; i < g_AWSRegions.length; i++) {
-    queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
-    queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
+  if (key != null && secret != null) {
+    resetEc2DataTable();
+    resetAWSValues();
+    for (var i = 0; i < g_AWSRegions.length; i++) {
+      queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
+      queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
+    }
+    // Because of the asynchronous nature of the AWS SDK calls, we need to
+    // wait until all data is returned for all regions before we proceed
+    g_EC2DataTimer = setInterval(waitForEC2ToGetReturned, 1000);
   }
-  // Because of the asynchronous nature of the AWS SDK calls, we need to
-  // wait until all data is returned for all regions before we proceed
-  g_EC2DataTimer = setInterval(waitForEC2ToGetReturned, 1000);
 }
 
 function waitForEC2ToGetReturned() {
@@ -148,7 +150,9 @@ function queryAWSforEC2Data(region, key, secret, reservations) {
     accessKeyId: key,
     secretAccessKey: secret,
     region: region,
-    maxRetries: 5
+    maxRetries: 5,
+    // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#sslEnabled-property
+    sslEnabled: true
   });
   if (!reservations) {
     var params = {
