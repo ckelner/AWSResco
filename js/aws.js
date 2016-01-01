@@ -41,16 +41,83 @@ function waitForEC2ToGetReturned() {
   }
 }
 
+// takes our custom data object segregated by region and
+// creates one giant array of all data
+function mergeDataFromAllRegions(customRegionDataObj){
+  var objLen = customRegionDataObj.length;
+  var newArr = [];
+  for(var i=0; i<objLen; i++) {
+    Array.prototype.push.apply( newArr, customRegionDataObj[i].data );
+  }
+  return newArr;
+}
+
 function combineEC2AndResData(ec2,res) {
+  ec2 = mergeDataFromAllRegions( ec2 );
+  res = mergeDataFromAllRegions( res );
   var resLen = res.length;
   var newRes = [];
+  // first
+  // merge all reservation data down
+  // reservation data is grouped by "purchase" while we want to handle this
+  // data by a unique combo of: type, az, windows, and vpc.
+  var uniqCount = 0;
+  var uniqKeeper = {};
   for(var i=0; i<resLen; i++) {
-    var resDataTop = res[i].data;
+    var resDataTop = res[i];
+    var uniqResId = resDataTop["type"] + resDataTop["az"] + resDataTop["windows"] + resDataTop["vpc"];
+    if( newRes[uniqResId] == null ) {
+      uniqKeeper[uniqResId] = uniqCount;
+      newRes[uniqCount] = resDataTop;
+      uniqCount++;
+    }
     for(var y=0; y<resLen; y++) {
-      var resDataBottom = res[y].data;
+      var resDataBottom = res[y];
       // TODO: take relevant data and mash it into the new array
+      if(
+        resDataTop["type"] == resDataBottom["type"] &&
+        resDataTop["az"] == resDataBottom["az"] &&
+        resDataTop["windows"] == resDataBottom["windows"] &&
+        resDataTop["vpc"] == resDataBottom["vpc"] &&
+        i != y // make sure we aren't looking at the same reservation
+      ) {
+        // we have the same reservation, just different purchase time
+        newRes[uniqKeeper[uniqResId]]["count"] += resDataBottom["count"];
+        Array.prototype.push.apply( newRes[uniqKeeper[uniqResId]]["resIds"], resDataBottom["resIds"] );
+      }
     }
   }
+  // second
+  // combine unique reservations with running ec2 instances
+  var ec2Len = ec2.length;
+  for(var p=0; p<ec2Len; p++) {
+    var uniqResLen = newRes.length;
+    var ec2Inst = ec2[p];
+    for(var q=0; q<uniqResLen; q++) {
+      var resInst = newRes[q];
+      if( newRes[q]["running"] == null ) {
+        newRes[q]["running"] = 0;
+        newRes[q]["running_ids"] = [];
+        newRes[q]["running_names"] = [];
+        newRes[q]["diff"] = 0;
+      }
+      if(
+        ec2Inst["type"] == resInst["type"] &&
+        ec2Inst["az"] == resInst["az"] &&
+        ec2Inst["windows"] == resInst["windows"] &&
+        ec2Inst["vpc"] == resInst["vpc"]
+      ) {
+        // got a match
+        newRes[q]["running"] += 1;
+        newRes[q]["diff"] = newRes[q]["count"] - newRes[q]["running"];
+        newRes[q]["running_ids"].push( ec2Inst["id"] );
+        if( ec2Inst["name"] != null && ec2Inst["name"] != "" ) {
+          newRes[q]["running_names"].push( ec2Inst["name"] );
+        }
+      }
+    }
+  }
+  return newRes;
 }
 
 function queryAWSforEC2Data(region, key, secret, reservations) {
@@ -127,6 +194,7 @@ function mungeEc2ResData(data) {
   var dataLen = data.ReservedInstances.length;
   for(var i=0; i < dataLen; i++) {
     mungedDataArr[i] = {};
+    mungedDataArr[i]["resIds"] = [ data.ReservedInstances[i].ReservedInstancesId ];
     mungedDataArr[i]["type"] = data.ReservedInstances[i].InstanceType;
     mungedDataArr[i]["count"] = data.ReservedInstances[i].InstanceCount;
     mungedDataArr[i]["az"] = data.ReservedInstances[i].AvailabilityZone;

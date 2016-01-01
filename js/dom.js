@@ -19,14 +19,18 @@ function showQueryError(htmlSnippit) {
 function buildEc2DataTable(data) {
   var htmlSnippit = "";
   var dataLen = data.length;
-  for(var z = 0; z < dataLen; z++) {
-    var regionData = data[z]["data"];
-    var regionLen = regionData.length;
-    for(var i = 0; i < regionLen; i++) {
-      htmlSnippit += "<tr><th scope='row'>" + regionData[i]["id"] +"</th><td>" +
-        regionData[i]["name"] + "</td><td>" + regionData[i]["type"] +
-        "</td><td>" + regionData[i]["az"] + "</td></tr>";
-    }
+  for(var i = 0; i < dataLen; i++) {
+    htmlSnippit += "<tr><th scope='row'>" +
+      data[i]["count"] +
+      "</th><td>" + data[i]["running"] +
+      "</th><td>" + data[i]["diff"] +
+      "</th><td>" + data[i]["type"] +
+      "</td><td>" + data[i]["az"] +
+      "</td><td>" + data[i]["windows"].toString() +
+      "</td><td>" + data[i]["vpc"].toString() +
+      "</td><td>" + data[i]["running_ids"].toString() +
+      "</td><td>" + data[i]["running_names"].toString() +
+      "</td></tr>";
   }
   return htmlSnippit;
 }
@@ -36,7 +40,7 @@ function setPleaseWaitDivUpdateInterval() {
 }
 
 function updatePleaseWaitDiv() {
-  if(getPleaseWaitDiv().innerHTML.toLowerCase.indexOf("please wait.....") != -1) {
+  if(getPleaseWaitDiv().innerHTML.toLowerCase().indexOf("please wait.....") != -1) {
     getPleaseWaitDiv().innerHTML += "."
   } else {
     getPleaseWaitDiv().innerHTML = "Please Wait"
