@@ -237,66 +237,70 @@ function mungeEc2Data(data) {
     return mungedDataArr;
   }
   var dataLen = data.Reservations.length;
+  var e = 0;
   for (var i = 0; i < dataLen; i++) {
-    var tags = data.Reservations[i].Instances[0].Tags;
-    var name = "";
-    if (tags.length > 1) {
-      var tagLen = tags.length;
-      for (var y = 0; y < tagLen; y++) {
-        try {
-          if (tags[y].Key != null) {
-            if (tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
-              name = tags[y].Value;
+    for (var n = 0; n < data.Reservations[i].Instances.length; n++) {
+      var tags = data.Reservations[i].Instances[n].Tags;
+      var name = "";
+      if (tags.length > 1) {
+        var tagLen = tags.length;
+        for (var y = 0; y < tagLen; y++) {
+          try {
+            if (tags[y].Key != null) {
+              if (tags[y].Key.toLowerCase() == "aws:autoscaling:groupName".toLowerCase() && name == "") {
+                name = tags[y].Value;
+              }
+              if (tags[y].Key.toLowerCase() == "name") {
+                name = tags[y].Value;
+              }
+            } else {
+              try {
+                console.log("Tags[" + y + "] empty: " + tags.toString());
+              } catch (e) {
+                console.log("Exception Id 00x1");
+              }
             }
-            if (tags[y].Key.toLowerCase() == "name") {
-              name = tags[y].Value;
-            }
-          } else {
-            try {
-              console.log("Tags[" + y + "] empty: " + tags.toString());
-            } catch (e) {
-              console.log("Exception Id 00x1");
-            }
+          } catch (e) {
+            console.log("Exception Id 00x3");
           }
-        } catch (e) {
-          console.log("Exception Id 00x3");
         }
-      }
-    } else {
-      if (tags.length == 1) {
-        name = tags[0].Value;
       } else {
-        try {
-          console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[0].InstanceId);
-        } catch (e) {
-          console.log("Exception Id 00x2");
-        }
-      }
-    }
-    mungedDataArr[i] = {};
-    mungedDataArr[i]["name"] = name;
-    mungedDataArr[i]["id"] = data.Reservations[i].Instances[0].InstanceId;
-    mungedDataArr[i]["type"] = data.Reservations[i].Instances[0].InstanceType;
-    mungedDataArr[i]["az"] = data.Reservations[i].Instances[0].Placement.AvailabilityZone;
-    try {
-      if (data.Reservations[i].Instances[0].Platform != undefined && data.Reservations[i].Instances[0].Platform != null) {
-        if (data.Reservations[i].Instances[0].Platform.toLowerCase() == "windows") {
-          mungedDataArr[i]["windows"] = true;
+        if (tags.length == 1) {
+          name = tags[0].Value;
         } else {
-          mungedDataArr[i]["windows"] = false;
+          try {
+            console.log("No name tag found for instance with id: " + data.Reservations[i].Instances[n].InstanceId);
+          } catch (e) {
+            console.log("Exception Id 00x2");
+          }
         }
-      } else {
-        // Doesn't have 'Platform' defined, assuming linux
-        mungedDataArr[i]["windows"] = false;
       }
-    } catch (e) {
-      console.log("Exception Id 00x4");
-    }
-    if (data.Reservations[i].Instances[0].VpcId != null &&
-      data.Reservations[i].Instances[0].VpcId != "") {
-      mungedDataArr[i]["vpc"] = true;
-    } else {
-      mungedDataArr[i]["vpc"] = false;
+      mungedDataArr[e] = {};
+      mungedDataArr[e]["name"] = name;
+      mungedDataArr[e]["id"] = data.Reservations[i].Instances[n].InstanceId;
+      mungedDataArr[e]["type"] = data.Reservations[i].Instances[n].InstanceType;
+      mungedDataArr[e]["az"] = data.Reservations[i].Instances[n].Placement.AvailabilityZone;
+      try {
+        if (data.Reservations[i].Instances[n].Platform != undefined && data.Reservations[i].Instances[0].Platform != null) {
+          if (data.Reservations[i].Instances[n].Platform.toLowerCase() == "windows") {
+            mungedDataArr[e]["windows"] = true;
+          } else {
+            mungedDataArr[e]["windows"] = false;
+          }
+        } else {
+          // Doesn't have 'Platform' defined, assuming linux
+          mungedDataArr[e]["windows"] = false;
+        }
+      } catch (e) {
+        console.log("Exception Id 00x4");
+      }
+      if (data.Reservations[i].Instances[n].VpcId != null &&
+        data.Reservations[i].Instances[n].VpcId != "") {
+        mungedDataArr[e]["vpc"] = true;
+      } else {
+        mungedDataArr[e]["vpc"] = false;
+      }
+      e++;
     }
   }
   return mungedDataArr;
