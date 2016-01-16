@@ -12,6 +12,8 @@ var g_AWSRegions = [
 var g_EC2Data = [];
 var g_EC2ResData = [];
 var g_EC2DataTimer = null;
+var g_ALL_Region_Const = "ALL"
+var g_REGION = "ALL"; //default
 
 function resetAWSValues() {
   g_EC2Data = [];
@@ -20,13 +22,19 @@ function resetAWSValues() {
   g_EC2DataTimer = null;
 }
 
-function queryAllAWSRegionsForEC2Data(key, secret) {
+function queryAllAWSRegionsForEC2Data(key, secret, region) {
   if (key != null && secret != null) {
+    g_REGION = region;
     resetEc2DataTable();
     resetAWSValues();
-    for (var i = 0; i < g_AWSRegions.length; i++) {
-      queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
-      queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
+    if (region.indexOf(g_ALL_Region_Const) != -1) {
+      for (var i = 0; i < g_AWSRegions.length; i++) {
+        queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
+        queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
+      }
+    } else {
+      queryAWSforEC2Data(g_REGION, key, secret, false);
+      queryAWSforEC2Data(g_REGION, key, secret, true);
     }
     // Because of the asynchronous nature of the AWS SDK calls, we need to
     // wait until all data is returned for all regions before we proceed
@@ -35,12 +43,21 @@ function queryAllAWSRegionsForEC2Data(key, secret) {
 }
 
 function waitForEC2ToGetReturned() {
-  if (g_EC2Data.length == g_AWSRegions.length &&
-    g_EC2ResData.length == g_AWSRegions.length) {
-    clearInterval(g_EC2DataTimer);
-    displayEc2DataTable(
-      combineEC2AndResData(g_EC2Data, g_EC2ResData)
-    );
+  if (g_REGION.indexOf(g_ALL_Region_Const) != -1) {
+    if (g_EC2Data.length == g_AWSRegions.length &&
+      g_EC2ResData.length == g_AWSRegions.length) {
+      clearInterval(g_EC2DataTimer);
+      displayEc2DataTable(
+        combineEC2AndResData(g_EC2Data, g_EC2ResData)
+      );
+    }
+  } else {
+    if (g_EC2Data.length > 0 && g_EC2ResData.length > 0) {
+      clearInterval(g_EC2DataTimer);
+      displayEc2DataTable(
+        combineEC2AndResData(g_EC2Data, g_EC2ResData)
+      );
+    }
   }
 }
 
