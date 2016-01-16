@@ -85,7 +85,7 @@ function combineEC2AndResData(ec2, res) {
         i !== y && resDataBottom !== resDataTop// make sure we aren't looking at the same reservation
       ) {
         // we have the same reservation, just different purchase time
-        console.log(uniqResId + " --- " + newRes[uniqKeeper[uniqResId]]["count"] + " --- " + resDataBottom["count"]);
+        //console.log(uniqResId + " --- " + newRes[uniqKeeper[uniqResId]]["count"] + " --- " + resDataBottom["count"]);
         newRes[uniqKeeper[uniqResId]]["count"] += resDataBottom["count"];
         Array.prototype.push.apply(newRes[uniqKeeper[uniqResId]]["resIds"], resDataBottom["resIds"]);
       }
