@@ -67,22 +67,22 @@ function combineEC2AndResData(ec2, res) {
   var uniqCount = 0;
   var uniqKeeper = {};
   for (var i = 0; i < resLen; i++) {
-    var resDataTop = resArr[i];
+    var resDataTop = JSON.parse(JSON.stringify(resArr[i])); // copy not reference
     var uniqResId = resDataTop["type"] + resDataTop["az"] + resDataTop["windows"] + resDataTop["vpc"];
     if (uniqKeeper[uniqResId] === undefined || uniqKeeper[uniqResId] === null) {
       uniqKeeper[uniqResId] = uniqCount;
-      newRes[uniqCount] = resDataTop;
+      newRes[uniqCount] = JSON.parse(JSON.stringify(resDataTop)); // copy not reference
       uniqCount++;
     }
     for (var y = 0; y < resLen; y++) {
-      var resDataBottom = resArr[y];
+      var resDataBottom = JSON.parse(JSON.stringify(resArr[y])); // copy not reference
       // TODO: take relevant data and mash it into the new array
       if (
         resDataTop["type"] === resDataBottom["type"] &&
         resDataTop["az"] === resDataBottom["az"] &&
         resDataTop["windows"] === resDataBottom["windows"] &&
         resDataTop["vpc"] === resDataBottom["vpc"] &&
-        i !== y // make sure we aren't looking at the same reservation
+        i !== y && resDataBottom !== resDataTop// make sure we aren't looking at the same reservation
       ) {
         // we have the same reservation, just different purchase time
         console.log(uniqResId + " --- " + newRes[uniqKeeper[uniqResId]]["count"] + " --- " + resDataBottom["count"]);
