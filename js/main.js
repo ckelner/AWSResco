@@ -24,12 +24,17 @@ function getSecretKeyValue() {
   return validateKeys(document.getElementById('awsSecretKey').value);
 }
 
+function getRegionValue() {
+  return document.getElementById('regionSelect').value;
+}
+
 function awsQueryButtonAction() {
   showPleaseWaitDiv();
   hideAccessSecretErrorDiv();
   queryAllAWSRegionsForEC2Data(
     getAccessKeyValue(),
     getSecretKeyValue()
+    getRegionValue()
   );
   // always return false to avoid page refresh
   return false;
