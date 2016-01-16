@@ -1,12 +1,30 @@
 var g_PleaseWaitIntervalId = null;
+var g_ReservationTotal = 0; //shitty hax
+var g_RunningTotal = 0; //shitty hax
+var g_Zones = [];
 
 function displayEc2DataTable(data) {
   getEc2DataTableBody().innerHTML = "";
   getEc2DataTableBody().innerHTML += buildEc2DataTable(data);
+  getTotalDiv().innerHTML = "<b>Total Reservations: " + g_ReservationTotal +
+    " --- Total Running Instances: " + g_RunningTotal + "<br>" +
+    buildZoneCheckListWithButton() + "<hr>";
   // let it be sortable :)
   new Tablesort(document.getElementById('resCoTable'));
   hidePleaseWaitDiv();
   showAwsQueryResults();
+}
+
+function buildZoneCheckListWithButton() {
+  var html = "<form class='form-inline' id='zoneForm'>";
+  for (var x = 0; x < g_Zones.length; x++) {
+    html += "<div class='checkbox'><label><input type='checkbox'" +
+      " name='" + g_Zones[x] + "'>" + g_Zones[x] + "</input></label></div>" +
+      "&nbsp;&nbsp;&nbsp;&nbsp;";
+  }
+  html += "<button id='zoneSelectButton' type='submit' class='btn btn-success'>" +
+    "Filter</button></form>";
+  return html;
 }
 
 function resetEc2DataTable() {
@@ -34,6 +52,11 @@ function buildEc2DataTable(data) {
       "</td><td>" + data[i]["running_ids"].join(",<br/>") +
       "</td><td>" + data[i]["running_names"].join(",<br/>") +
       "</td></tr>";
+      g_ReservationTotal += data[i]["count"];
+      g_RunningTotal += data[i]["running"];
+      if (!g_Zones.contains(data[i]["az"])) {
+        g_Zones.push(data[i]["az"]);
+      }
   }
   return htmlSnippit;
 }
@@ -48,6 +71,10 @@ function updatePleaseWaitDiv() {
   } else {
     getPleaseWaitDiv().innerHTML = "Please Wait"
   }
+}
+
+function getTotalDiv() {
+  return document.getElementById("totalData");
 }
 
 function getPleaseWaitDiv() {
