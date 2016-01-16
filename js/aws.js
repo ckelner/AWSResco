@@ -46,7 +46,7 @@ function waitForEC2ToGetReturned() {
 
 // takes our custom data object segregated by region and
 // creates one giant array of all data
-function mergeDataFromAllRegions(customRegionDataObj) {
+function mergeDataFromAllRegionsIntoSingleArray(customRegionDataObj) {
   var objLen = customRegionDataObj.length;
   var newArr = [];
   for (var i = 0; i < objLen; i++) {
@@ -56,35 +56,36 @@ function mergeDataFromAllRegions(customRegionDataObj) {
 }
 
 function combineEC2AndResData(ec2, res) {
-  ec2 = mergeDataFromAllRegions(ec2);
-  res = mergeDataFromAllRegions(res);
-  var resLen = res.length;
-  var newRes = [];
+  var ec2Arr = mergeDataFromAllRegionsIntoSingleArray(ec2);
+  var resArr = mergeDataFromAllRegionsIntoSingleArray(res);
   // first
   // merge all reservation data down
   // reservation data is grouped by "purchase" while we want to handle this
   // data by a unique combo of: type, az, windows, and vpc.
+  var resLen = resArr.length;
+  var newRes = [];
   var uniqCount = 0;
   var uniqKeeper = {};
   for (var i = 0; i < resLen; i++) {
-    var resDataTop = res[i];
+    var resDataTop = resArr[i];
     var uniqResId = resDataTop["type"] + resDataTop["az"] + resDataTop["windows"] + resDataTop["vpc"];
-    if (newRes[uniqResId] == null) {
+    if (uniqKeeper[uniqResId] === undefined || uniqKeeper[uniqResId] === null) {
       uniqKeeper[uniqResId] = uniqCount;
       newRes[uniqCount] = resDataTop;
       uniqCount++;
     }
     for (var y = 0; y < resLen; y++) {
-      var resDataBottom = res[y];
+      var resDataBottom = resArr[y];
       // TODO: take relevant data and mash it into the new array
       if (
-        resDataTop["type"] == resDataBottom["type"] &&
-        resDataTop["az"] == resDataBottom["az"] &&
-        resDataTop["windows"] == resDataBottom["windows"] &&
-        resDataTop["vpc"] == resDataBottom["vpc"] &&
-        i != y // make sure we aren't looking at the same reservation
+        resDataTop["type"] === resDataBottom["type"] &&
+        resDataTop["az"] === resDataBottom["az"] &&
+        resDataTop["windows"] === resDataBottom["windows"] &&
+        resDataTop["vpc"] === resDataBottom["vpc"] &&
+        i !== y // make sure we aren't looking at the same reservation
       ) {
         // we have the same reservation, just different purchase time
+        console.log(uniqResId + " --- " + newRes[uniqKeeper[uniqResId]]["count"] + " --- " + resDataBottom["count"]);
         newRes[uniqKeeper[uniqResId]]["count"] += resDataBottom["count"];
         Array.prototype.push.apply(newRes[uniqKeeper[uniqResId]]["resIds"], resDataBottom["resIds"]);
       }
@@ -92,10 +93,10 @@ function combineEC2AndResData(ec2, res) {
   }
   // second
   // combine unique reservations with running ec2 instances
-  var ec2Len = ec2.length;
+  var ec2Len = ec2Arr.length;
   for (var p = 0; p < ec2Len; p++) {
     var uniqResLen = newRes.length;
-    var ec2Inst = ec2[p];
+    var ec2Inst = ec2Arr[p];
     var foundRes = false;
     for (var q = 0; q < uniqResLen; q++) {
       var resInst = newRes[q];
