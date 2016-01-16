@@ -7,14 +7,14 @@ function displayEc2DataTable(data) {
   getEc2DataTableBody().innerHTML = "";
   getEc2DataTableBody().innerHTML += buildEc2DataTable(data);
   getTotalDiv().innerHTML = "<b>Total Reservations: " + g_ReservationTotal +
-    " --- Total Running Instances: " + g_RunningTotal + "<br>" +
-    buildZoneCheckListWithButton() + "<hr>";
+    " --- Total Running Instances: " + g_RunningTotal + "<br><hr>";
   // let it be sortable :)
   new Tablesort(document.getElementById('resCoTable'));
   hidePleaseWaitDiv();
   showAwsQueryResults();
 }
 
+// Currently not in use
 function buildZoneCheckListWithButton() {
   var html = "<form class='form-inline' id='zoneForm'>";
   for (var x = 0; x < g_Zones.length; x++) {
@@ -30,6 +30,9 @@ function buildZoneCheckListWithButton() {
 function resetEc2DataTable() {
   hideAwsQueryResults();
   getEc2DataTableBody().innerHTML = "";
+  getTotalDiv().innerHTML = "";
+  g_ReservationTotal = 0;
+  g_RunningTotal = 0;
 }
 
 function showQueryError(htmlSnippit) {
