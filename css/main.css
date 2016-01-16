@@ -29,3 +29,9 @@ h1 a:hover {
 #errorAccessSecretKey {
     display: none;
 }
+#security {
+  font-size: .5em;
+  float: right;
+  position: relative;
+  top: 15px;
+}

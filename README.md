@@ -13,7 +13,7 @@ This information is then presented to the user as:
 - The hard data on each reservation & running instance sets: `Type`, `Zone`, `Windows`, `VPC`, `Runnings Ids`, and `Running Names`
 
 # Security?
-While AWSResco itself isn't HTTPS, all communication with AWS is over HTTPS.
+While AWSResco itself doesn't use HTTPS from S3 to the client's browser, all communication from the client's browser to AWS is over HTTPS.
 This means that your access and secret keys are never sent from your browser over anything other than HTTPS.
 This is enabled via [http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#sslEnabled-property](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#sslEnabled-property).
 
