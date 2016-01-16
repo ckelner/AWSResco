@@ -69,12 +69,12 @@ function combineEC2AndResData(ec2, res) {
   for (var i = 0; i < resLen; i++) {
     var resDataTop = JSON.parse(JSON.stringify(resArr[i])); // copy not reference
     var uniqResId = resDataTop["type"] + resDataTop["az"] + resDataTop["windows"] + resDataTop["vpc"];
-    if (uniqKeeper[uniqResId] === undefined || uniqKeeper[uniqResId] === null) {
+    if (uniqKeeper[uniqResId] === undefined) {
       uniqKeeper[uniqResId] = uniqCount;
       newRes[uniqCount] = JSON.parse(JSON.stringify(resDataTop)); // copy not reference
       uniqCount++;
     }
-    for (var y = 0; y < resLen; y++) {
+    for (var y = i + 1; y < resLen; y++) {
       var resDataBottom = JSON.parse(JSON.stringify(resArr[y])); // copy not reference
       // TODO: take relevant data and mash it into the new array
       if (
