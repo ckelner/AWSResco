@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="css/boilerplate.css">
-  <link rel="stylesheet" href="css/sortable-theme-bootstrap.css">
+  <link rel="stylesheet" href="css/sortable.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="col-md-12" id="awsQueryResults">
-        <table class="table table-condensed sortable-theme-bootstrap table-striped table-hove" data-sortable>
+        <table id="resCoTable" class="table table-condensed sortable-theme-bootstrap table-striped table-hove">
           <thead>
             <tr>
               <th>
@@ -88,6 +88,7 @@
   </div>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.26.min.js"></script>
   <script src="js/sortable.min.js"></script>
+  <script src="js/sortable.number.js"></script>
   <script src="js/aws.js"></script>
   <script src="js/dom.js"></script>
   <script src="js/main.js"></script>

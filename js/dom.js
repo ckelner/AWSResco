@@ -4,7 +4,7 @@ function displayEc2DataTable(data) {
   getEc2DataTableBody().innerHTML = "";
   getEc2DataTableBody().innerHTML += buildEc2DataTable(data);
   // let it be sortable :)
-  Sortable.init();
+  new Tablesort(document.getElementById('resCoTable'));
   hidePleaseWaitDiv();
   showAwsQueryResults();
 }
