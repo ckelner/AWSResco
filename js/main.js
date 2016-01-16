@@ -33,7 +33,7 @@ function awsQueryButtonAction() {
   hideAccessSecretErrorDiv();
   queryAllAWSRegionsForEC2Data(
     getAccessKeyValue(),
-    getSecretKeyValue()
+    getSecretKeyValue(),
     getRegionValue()
   );
   // always return false to avoid page refresh
