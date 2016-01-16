@@ -2,111 +2,111 @@
 <html class="no-js" lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>AWSResco</title>
-  <meta name="description" content="A tool for comparing AWS running instances to AWS reservations.">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/boilerplate.css">
-  <link rel="stylesheet" href="css/sortable.css">
-  <link rel="stylesheet" href="css/main.css">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>AWSResco</title>
+    <meta name="description" content="A tool for comparing AWS running instances to AWS reservations.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/boilerplate.css">
+    <link rel="stylesheet" href="css/sortable.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
-  <div class="container">
-    <div class="page-header">
-      <h1>
-        <a href="/">AWSResco</a>&nbsp;&nbsp;
-        <small>An AWS Reservation Comparison tool</small>
-      </h1>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label for="awsAccessKey">AWS Access Key</label>
-          <input type="text" class="form-control" id="awsAccessKey" placeholder="AWS Access Key"/>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <a href="/">AWSResco</a>&nbsp;&nbsp;
+                <small>An AWS Reservation Comparison tool</small>
+            </h1>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label for="awsSecretKey">AWS Secret Key</label>
-          <input type="password" class="form-control" id="awsSecretKey" placeholder="AWS Secret Key"/>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="awsAccessKey">AWS Access Key</label>
+                    <input type="text" class="form-control" id="awsAccessKey" placeholder="AWS Access Key" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="awsSecretKey">AWS Secret Key</label>
+                    <input type="password" class="form-control" id="awsSecretKey" placeholder="AWS Secret Key" />
+                </div>
+            </div>
+            <div class="col-md-2 col-padding-top-25">
+                <select class="form-control" id="regionSelect">
+                    <option>us-east-1</option>
+                    <option>us-west-1</option>
+                    <option>us-west-2</option>
+                    <option>eu-west-1</option>
+                    <option>eu-central-1</option>
+                    <option>ap-southeast-1</option>
+                    <option>ap-southeast-2</option>
+                    <option>ap-northeast-1</option>
+                    <option>sa-east-1</option>
+                    <option>ALL</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-padding-top-25">
+                <button id="awsQueryButton" type="submit" class="btn btn-success">Submit</button>
+            </div>
         </div>
-      </div>
-      <div class="col-md-2 col-padding-top-25">
-        <select class="form-control" id="regionSelect">
-          <option>us-east-1</option>
-          <option>us-west-1</option>
-          <option>us-west-2</option>
-          <option>eu-west-1</option>
-          <option>eu-central-1</option>
-          <option>ap-southeast-1</option>
-          <option>ap-southeast-2</option>
-          <option>ap-northeast-1</option>
-          <option>sa-east-1</option>
-          <option>ALL</option>
-        </select>
-      </div>
-      <div class="col-md-2 col-padding-top-25">
-        <button id="awsQueryButton" type="submit" class="btn btn-success">Submit</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12" id="pleaseWait">Please Wait</div>
-      <div class="col-md-12" id="errorAccessSecretKey">
-        <div class="alert alert-danger alert-dismissible" role="alert">
-          <strong>Error!</strong> You must specify an access key and secret key, please check your inputs and try again.
+        <div class="row">
+            <div class="col-md-12" id="pleaseWait">Please Wait</div>
+            <div class="col-md-12" id="errorAccessSecretKey">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <strong>Error!</strong> You must specify an access key and secret key, please check your inputs and try again.
+                </div>
+            </div>
+            <div class="col-md-12" id="awsQueryResults">
+                <div id="totalData"></div>
+                <table id="resCoTable" class="table table-condensed sortable-theme-bootstrap table-striped table-hove">
+                    <thead>
+                        <tr>
+                            <th>
+                                Reservation Count
+                            </th>
+                            <th>
+                                Running Instances
+                            </th>
+                            <th>
+                                Differential
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                Zone
+                            </th>
+                            <th>
+                                Windows
+                            </th>
+                            <th>
+                                VPC
+                            </th>
+                            <th>
+                                Running Ids
+                            </th>
+                            <th id="tabDataRunNames">
+                                Running Names
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="ec2DataTableBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-      <div class="col-md-12" id="awsQueryResults">
-        <div id="totalData"></div>
-        <table id="resCoTable" class="table table-condensed sortable-theme-bootstrap table-striped table-hove">
-          <thead>
-            <tr>
-              <th>
-                Reservation Count
-              </th>
-              <th>
-                Running Instances
-              </th>
-              <th>
-                Differential
-              </th>
-              <th>
-                Type
-              </th>
-              <th>
-                Zone
-              </th>
-              <th>
-                Windows
-              </th>
-              <th>
-                VPC
-              </th>
-              <th>
-                Running Ids
-              </th>
-              <th id="tabDataRunNames">
-                Running Names
-              </th>
-            </tr>
-          </thead>
-          <tbody id="ec2DataTableBody">
-          </tbody>
-        </table>
-      </div>
     </div>
-  </div>
-  </div>
-  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.30.min.js"></script>
-  <script src="js/sortable.min.js"></script>
-  <script src="js/sortable.number.js"></script>
-  <script src="js/aws.js"></script>
-  <script src="js/dom.js"></script>
-  <script src="js/main.js"></script>
+    </div>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.30.min.js"></script>
+    <script src="js/sortable.min.js"></script>
+    <script src="js/sortable.number.js"></script>
+    <script src="js/aws.js"></script>
+    <script src="js/dom.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

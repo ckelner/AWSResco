@@ -55,11 +55,11 @@ function buildEc2DataTable(data) {
       "</td><td>" + data[i]["running_ids"].join(",<br/>") +
       "</td><td>" + data[i]["running_names"].join(",<br/>") +
       "</td></tr>";
-      g_ReservationTotal += data[i]["count"];
-      g_RunningTotal += data[i]["running"];
-      if (!g_Zones.contains(data[i]["az"])) {
-        g_Zones.push(data[i]["az"]);
-      }
+    g_ReservationTotal += data[i]["count"];
+    g_RunningTotal += data[i]["running"];
+    if (!g_Zones.contains(data[i]["az"])) {
+      g_Zones.push(data[i]["az"]);
+    }
   }
   return htmlSnippit;
 }

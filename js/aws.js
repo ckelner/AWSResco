@@ -104,7 +104,7 @@ function combineEC2AndResData(ec2, res) {
         resDataTop["az"] === resDataBottom["az"] &&
         resDataTop["windows"] === resDataBottom["windows"] &&
         resDataTop["vpc"] === resDataBottom["vpc"] &&
-        i !== y && resDataBottom !== resDataTop// make sure we aren't looking at the same reservation
+        i !== y && resDataBottom !== resDataTop // make sure we aren't looking at the same reservation
       ) {
         // we have the same reservation, just different purchase time
         //console.log(uniqResId + " --- " + newRes[uniqKeeper[uniqResId]]["count"] + " --- " + resDataBottom["count"]);
