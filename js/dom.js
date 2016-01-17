@@ -10,6 +10,7 @@ function displayEc2DataTable(data) {
     " --- Total Running Instances: " + g_RunningTotal + "<br><hr>";
   // let it be sortable :)
   new Tablesort(document.getElementById('resCoTable'));
+  document.getElementById("differentialHeader").click();
   hidePleaseWaitDiv();
   showAwsQueryResults();
 }
