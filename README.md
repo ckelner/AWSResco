@@ -7,6 +7,7 @@ The latest deployed version can be found at: [http://awsresco.s3-website-us-east
 - [How it works](#how-it-works)
 - [Security?](#security)
 - [AWS IAM Policy for access](#aws-iam-policy-for-access)
+- [Why?](#why)
 - [Gaps](#gaps)
 - [Screenshots](#screenshots)
 - [Development](#development)
@@ -48,6 +49,9 @@ The policy you use for AWSResco should follow the least privilege access rules. 
   ]
 }
 ```
+
+## Why?
+In my time with working with AWS, the question of "Am I utilizing my reservations correctly?" has come up many times.  AWS doesn't provide an interface, tool, or output that I am aware of that can provide this information in an easily consumable way.
 
 ## Gaps
 Currently AWSResco does not take into account `OfferingType`, it assumes that only `"Heavy Utilization"` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
