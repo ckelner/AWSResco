@@ -30,8 +30,11 @@ h1 a:hover {
     display: none;
 }
 #security {
-  font-size: .5em;
-  float: right;
-  position: relative;
-  top: 15px;
+    font-size: .5em;
+    float: right;
+    position: relative;
+    top: 15px;
+}
+.right .github-fork-ribbon {
+    background-color: #f80;
 }
