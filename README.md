@@ -17,8 +17,28 @@ While AWSResco itself doesn't use HTTPS from S3 to the client's browser, all com
 This means that your access and secret keys are never sent from your browser over anything other than HTTPS.
 This is enabled via [http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#sslEnabled-property](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#sslEnabled-property).
 
+# AWS IAM Policy for access
+The policy you use for AWSResco should follow the least privilege access rules.  In the case of AWSResco, the only access needed is for the the [describeInstances](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/EC2.html#describeInstances-property) and the [describeReservedInstances](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/EC2.html#describeReservedInstances-property) API calls.  The following is an example of the policy to use:
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1452989493668",
+      "Action": [
+        "ec2:DescribeInstances",
+        "ec2:DescribeReservedInstances"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+```
+
 ## Gaps
-Currently AWSResco does not take into account `OfferingType`, it assumed that only `"Heavy Utilization"` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
+Currently AWSResco does not take into account `OfferingType`, it assumes that only `"Heavy Utilization"` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
 
 ## Screenshots
 ![img](readme-assets/images/pixelated_rescompare.png?raw=true)
