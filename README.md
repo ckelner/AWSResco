@@ -4,15 +4,18 @@ A standalone SPA using the client side AWS JS SDK to get instance and reservatio
 The latest deployed version can be found at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
 
 ### Table of Contents
+- [Why?](#why)
 - [How it works](#how-it-works)
 - [Security?](#security)
 - [AWS IAM Policy for access](#aws-iam-policy-for-access)
-- [Why?](#why)
 - [Gaps](#gaps)
 - [Screenshots](#screenshots)
 - [Development](#development)
 - [Production build](#production-build)
   - [Build Gaps](#build-gaps)
+
+## Why?
+In my time with working with AWS, the question of "Am I utilizing my reservations correctly?" has come up many times.  AWS doesn't provide an interface, tool, or output that I am aware of that can provide this information in an easily consumable way.
 
 ## How it works
 AWS Reservation Comparison (AWSResco) takes a look at AWS reservations for a given account and compares them against running infrastructure.  It combines multiple reservation purchases of the same `Instance Type`, `Availability Zone`, `Platform` (windows or linux), and `VPC` (EC2-Classic or VPC) into a single object, then looks at all running instances and matches them with any reservation based on the same values.
@@ -49,9 +52,6 @@ The policy you use for AWSResco should follow the least privilege access rules. 
   ]
 }
 ```
-
-## Why?
-In my time with working with AWS, the question of "Am I utilizing my reservations correctly?" has come up many times.  AWS doesn't provide an interface, tool, or output that I am aware of that can provide this information in an easily consumable way.
 
 ## Gaps
 Currently AWSResco does not take into account `OfferingType`, it assumes that only `Heavy Utilization` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
