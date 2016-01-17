@@ -41,7 +41,7 @@ The policy you use for AWSResco should follow the least privilege access rules. 
 Currently AWSResco does not take into account `OfferingType`, it assumes that only `"Heavy Utilization"` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
 
 ## Screenshots
-![img](readme-assets/images/pixelated_rescompare.png?raw=true)
+![img](readme-assets/images/pixelated_rescompare_v1.0.png?raw=true)
 
 ## Development
 - Run with: `python -m SimpleHTTPServer` (or your favorite web server)
