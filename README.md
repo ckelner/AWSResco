@@ -17,7 +17,7 @@
 * * *
 
 ## What
-AWSResco is a standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.  This comparison provides a "Differential" value to the user to see where they are over or under allotted on their reservations.
+AWSResco is a standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.  This comparison provides a "Differential" value to the user to see where they are over or under allotted on their reservations.  The closest tool AWS has is [Reservation Utilization Reports](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/usage-reports-ri.html) which works well in some cases, mostly smaller organizations, but lacks granularity for others.
 
 The latest version is at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
 
