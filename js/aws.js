@@ -121,13 +121,14 @@ function combineEC2AndResData(ec2, res) {
     var ec2Inst = ec2Arr[p];
     var foundRes = false;
     for (var q = 0; q < uniqResLen; q++) {
-      var resInst = newRes[q];
+      // setup for a new comparison
       if (newRes[q]["running"] == null) {
         newRes[q]["running"] = 0;
         newRes[q]["running_ids"] = [];
         newRes[q]["running_names"] = [];
-        newRes[q]["diff"] = 0 - newRes[q]["count"];
+        newRes[q]["diff"] = newRes[q]["count"];
       }
+      var resInst = newRes[q];
       if (
         ec2Inst["type"] == resInst["type"] &&
         ec2Inst["az"] == resInst["az"] &&
@@ -136,7 +137,7 @@ function combineEC2AndResData(ec2, res) {
       ) {
         // got a match
         newRes[q]["running"] += 1;
-        newRes[q]["diff"] = newRes[q]["count"] - newRes[q]["running"];
+        newRes[q]["diff"] -= 1;
         newRes[q]["running_ids"].push(ec2Inst["id"]);
         if (ec2Inst["name"] != undefined && ec2Inst["name"] != null && ec2Inst["name"] != "") {
           newRes[q]["running_names"].push(ec2Inst["name"]);
@@ -145,7 +146,7 @@ function combineEC2AndResData(ec2, res) {
         break; // exit since we found a match
       }
     }
-    // if not reservation was found that matched, then add this to collection to report
+    // if no reservation was found that matched, then add this to collection to report
     if (foundRes === false) {
       var aNewRes = {};
       aNewRes["running"] = 1;
