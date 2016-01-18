@@ -65,8 +65,15 @@ Currently AWSResco does not take into account `OfferingType`, it assumes that on
 - Run with: `python -m SimpleHTTPServer` (or your favorite web server)
 - Navigate to: `localhost:8000/dev.html` (or your favorite web server's configuration)
 
-## Production build
+## Test
+- Manual process to test
+
+## Build
 - Run `sudo bash build.sh` which will uglify css and javascript
 
-### Build Gaps
-Changes to `dev.html` need to be copied to `index.html` at this time.
+## Deploy
+- Manual process of pushing to S3
+
+### Build & Deploy Gaps
+- Changes to `dev.html` need to be copied to `index.html` at this time.
+- No publish scripts to get new version to S3.
