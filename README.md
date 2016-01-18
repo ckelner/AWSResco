@@ -1,18 +1,28 @@
 # AWSResco
-A standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.  This comparison provides a "Differential" value to the user to see where they are over or under allotted on their reservations.
-
-The latest deployed version can be found at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
 
 ### Table of Contents
+- [What](#what)
+  - [Screenshot Example](#screenshot-example)
 - [Why?](#why)
 - [How it works](#how-it-works)
 - [Security?](#security)
 - [AWS IAM Policy for access](#aws-iam-policy-for-access)
 - [Gaps](#gaps)
-- [Screenshots](#screenshots)
 - [Development](#development)
-- [Production build](#production-build)
-  - [Build Gaps](#build-gaps)
+- [Test](#test)
+- [Build](#build)
+- [Deploy](#deploy)
+- [Build & Deploy Gaps](#build--deploy-gaps)
+
+* * *
+
+## What
+AWSResco is a standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.  This comparison provides a "Differential" value to the user to see where they are over or under allotted on their reservations.
+
+The latest version is at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
+
+### Screenshot Example
+![img](readme-assets/images/pixelated_rescompare_v1.0.3.png?raw=true)
 
 ## Why?
 In my time with working with AWS, the question of "Am I utilizing my reservations correctly?" has come up many times.  AWS doesn't provide an interface, tool, or output that I am aware of that can provide this information in an easily consumable way.
@@ -56,15 +66,19 @@ The policy you use for AWSResco should follow the least privilege access rules. 
 ## Gaps
 Currently AWSResco does not take into account `OfferingType`, it assumes that only `Heavy Utilization` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
 
-## Screenshots
-![img](readme-assets/images/pixelated_rescompare_v1.0.png?raw=true)
-
 ## Development
 - Run with: `python -m SimpleHTTPServer` (or your favorite web server)
 - Navigate to: `localhost:8000/dev.html` (or your favorite web server's configuration)
 
-## Production build
+## Test
+- Manual process to test
+
+## Build
 - Run `sudo bash build.sh` which will uglify css and javascript
 
-### Build Gaps
-Changes to `dev.html` need to be copied to `index.html` at this time.
+## Deploy
+- Manual process of pushing to S3
+
+## Build & Deploy Gaps
+- Changes to `dev.html` need to be copied to `index.html` at this time.
+- No publish scripts to get new version to S3.
