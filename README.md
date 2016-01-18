@@ -16,8 +16,10 @@ The latest deployed version can be found at: [http://awsresco.s3-website-us-east
 - [AWS IAM Policy for access](#aws-iam-policy-for-access)
 - [Gaps](#gaps)
 - [Development](#development)
-- [Production build](#production-build)
-  - [Build Gaps](#build-gaps)
+- [Test](#test)
+- [Build](#build)
+- [Deploy](#deploy)
+- [Build & Deploy Gaps](#build--deploy-gaps)
 
 ## Why?
 In my time with working with AWS, the question of "Am I utilizing my reservations correctly?" has come up many times.  AWS doesn't provide an interface, tool, or output that I am aware of that can provide this information in an easily consumable way.
@@ -74,6 +76,6 @@ Currently AWSResco does not take into account `OfferingType`, it assumes that on
 ## Deploy
 - Manual process of pushing to S3
 
-### Build & Deploy Gaps
+## Build & Deploy Gaps
 - Changes to `dev.html` need to be copied to `index.html` at this time.
 - No publish scripts to get new version to S3.
