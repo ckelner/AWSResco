@@ -1,15 +1,7 @@
 # AWSResco
-A standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.  This comparison provides a "Differential" value to the user to see where they are over or under allotted on their reservations.
-
-The latest deployed version can be found at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
-
-* * *
-
-![img](readme-assets/images/pixelated_rescompare_v1.0.3.png?raw=true)
-
-* * *
 
 ### Table of Contents
+- [What](#what)
 - [Why?](#why)
 - [How it works](#how-it-works)
 - [Security?](#security)
@@ -20,6 +12,16 @@ The latest deployed version can be found at: [http://awsresco.s3-website-us-east
 - [Build](#build)
 - [Deploy](#deploy)
 - [Build & Deploy Gaps](#build--deploy-gaps)
+
+* * *
+
+## What
+AWSResco is a standalone SPA using the client side AWS JS SDK to get instance and reservation info for JIT comparison of running infrastructure.  This comparison provides a "Differential" value to the user to see where they are over or under allotted on their reservations.
+
+The latest version is at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
+
+### Screenshot Example
+![img](readme-assets/images/pixelated_rescompare_v1.0.3.png?raw=true)
 
 ## Why?
 In my time with working with AWS, the question of "Am I utilizing my reservations correctly?" has come up many times.  AWS doesn't provide an interface, tool, or output that I am aware of that can provide this information in an easily consumable way.
