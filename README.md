@@ -3,13 +3,14 @@ A standalone SPA using the client side AWS JS SDK to get instance and reservatio
 
 The latest deployed version can be found at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
 
+![img](readme-assets/images/pixelated_rescompare_v1.0.3.png?raw=true)
+
 ### Table of Contents
 - [Why?](#why)
 - [How it works](#how-it-works)
 - [Security?](#security)
 - [AWS IAM Policy for access](#aws-iam-policy-for-access)
 - [Gaps](#gaps)
-- [Screenshots](#screenshots)
 - [Development](#development)
 - [Production build](#production-build)
   - [Build Gaps](#build-gaps)
@@ -55,9 +56,6 @@ The policy you use for AWSResco should follow the least privilege access rules. 
 
 ## Gaps
 Currently AWSResco does not take into account `OfferingType`, it assumes that only `Heavy Utilization` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
-
-## Screenshots
-![img](readme-assets/images/pixelated_rescompare_v1.0.png?raw=true)
 
 ## Development
 - Run with: `python -m SimpleHTTPServer` (or your favorite web server)
