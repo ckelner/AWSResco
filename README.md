@@ -3,7 +3,11 @@ A standalone SPA using the client side AWS JS SDK to get instance and reservatio
 
 The latest deployed version can be found at: [http://awsresco.s3-website-us-east-1.amazonaws.com/](http://awsresco.s3-website-us-east-1.amazonaws.com/)
 
+* * *
+
 ![img](readme-assets/images/pixelated_rescompare_v1.0.3.png?raw=true)
+
+* * *
 
 ### Table of Contents
 - [Why?](#why)
