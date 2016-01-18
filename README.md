@@ -2,6 +2,7 @@
 
 ### Table of Contents
 - [What](#what)
+  - [Screenshot Example](#screenshot-example)
 - [Why?](#why)
 - [How it works](#how-it-works)
 - [Security?](#security)
