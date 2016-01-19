@@ -63,6 +63,17 @@ The policy you use for AWSResco should follow the least privilege access rules. 
 }
 ```
 
+If you are using an IAM instance profile you need to use the (access key, secret key, token) tuple to authenticate.
+You can retrieve the values from the EC2 metadata API. First, find the name of your instance-profile:
+
+`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/`
+
+Then, plug in the name at the end of the URL
+
+`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/instance-profile`
+
+The resulting JSON will have the necessary credentials to utilize the site.
+
 ## Gaps
 Currently AWSResco does not take into account `OfferingType`, it assumes that only `Heavy Utilization` is being used as that was the original use case for the tool.  There are plans to support all `OfferingType` variations - see [Issue#3](https://github.com/ckelner/AWSResco/issues/3).
 
@@ -74,7 +85,7 @@ Currently AWSResco does not take into account `OfferingType`, it assumes that on
 - Manual process to test
 
 ## Build
-- Run `sudo bash build.sh` which will uglify css and javascript
+- Run `bash build.sh` which will uglify css and javascript
 
 ## Deploy
 - Manual process of pushing to S3
