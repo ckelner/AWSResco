@@ -239,7 +239,9 @@ function mungeEc2ResData(data) {
     mungedDataArr[i]["type"] = data.ReservedInstances[i].InstanceType;
     mungedDataArr[i]["count"] = data.ReservedInstances[i].InstanceCount;
     mungedDataArr[i]["az"] = data.ReservedInstances[i].AvailabilityZone;
-    mungedDataArr[i]["cost"] = data.ReservedInstances[i].RecurringCharges[0].Amount;
+    if (data.ReservedInstances[i].RecurringCharges[0]) {
+      mungedDataArr[i]["cost"] = data.ReservedInstances[i].RecurringCharges[0].Amount;
+    }
     if (data.ReservedInstances[i].ProductDescription.toLowerCase().indexOf("windows") != -1) {
       mungedDataArr[i]["windows"] = true;
     } else {
