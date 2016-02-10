@@ -18,7 +18,18 @@ function getTableDataAsCSV() {
     }
     csvData += '\n';
   }
-  window.open(encodeURI(csvData));
+  var link = document.createElement('a');
+  link.setAttribute('href', encodeURI(csvData));
+  link.setAttribute('download', buildCSVFileName());
+  link.click();
+}
+
+function buildCSVFileName() {
+  var fileName = "awsresco-export_";
+  var d = new Date();
+  fileName += d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() +
+    "_" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+  return fileName;
 }
 
 // Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
