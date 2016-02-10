@@ -8,13 +8,20 @@ function displayEc2DataTable(data) {
   getEc2DataTableBody().innerHTML += buildEc2DataTable(data);
   getTotalDiv().innerHTML = "<b>Total Reservations: " + g_ReservationTotal +
     " --- Total Running Instances: " + g_RunningTotal +
-    " --- <button id='downloadAsCSV' onClick='getTableDataAsCSV()' " +
-    "class='btn btn-primary'>Download Data as CSV</button><br><hr>";
+    " --- <button id='downloadAsCSV' class='btn btn-primary'> " +
+    "Download Data as CSV</button><br><hr>";
   // let it be sortable :)
   new Tablesort(document.getElementById('resCoTable'));
   document.getElementById("differentialHeader").click();
   hidePleaseWaitDiv();
+  setupDownloadAsCSVButtonClick();
   showAwsQueryResults();
+}
+
+function setupDownloadAsCSVButtonClick() {
+  document.getElementById("downloadAsCSV").addEventListener("click", function() {
+    getTableDataAsCSV();
+  });
 }
 
 // Currently not in use
