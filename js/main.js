@@ -29,13 +29,12 @@ function getRegionValue() {
 }
 
 function awsQueryButtonAction() {
+  resetCredChecks();
   showPleaseWaitDiv();
   hideAccessSecretErrorDiv();
-  queryAllAWSRegionsForEC2Data(
-    getAccessKeyValue(),
-    getSecretKeyValue(),
-    getRegionValue()
-  );
+  hideCredentialsErrorDiv();
+  testAWSCredentials(getAccessKeyValue(), getSecretKeyValue(), getRegionValue());
+  waitForCredCheck();
   // always return false to avoid page refresh
   return false;
 }
