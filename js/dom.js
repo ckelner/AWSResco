@@ -100,8 +100,25 @@ function showPleaseWaitDiv() {
 }
 
 function hidePleaseWaitDiv() {
-  clearInterval(g_PleaseWaitIntervalId);
+  clearPleaseWaitInterval();
   getPleaseWaitDiv().style.display = "none";
+}
+
+function clearPleaseWaitInterval() {
+  clearInterval(g_PleaseWaitIntervalId);
+}
+
+function getCredentialsErrorDiv() {
+  return document.getElementById("errorCredentials");
+}
+
+function showCredentialsErrorDiv() {
+  hidePleaseWaitDiv();
+  getCredentialsErrorDiv().style.display = "block";
+}
+
+function hideCredentialsErrorDiv() {
+  getCredentialsErrorDiv().style.display = "none";
 }
 
 function getAccessSecretErrorDiv() {

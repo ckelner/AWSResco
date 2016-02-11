@@ -14,6 +14,9 @@ var g_EC2ResData = [];
 var g_EC2DataTimer = null;
 var g_ALL_Region_Const = "ALL"
 var g_REGION = "ALL"; //default
+var g_GOOD_CREDS = false;
+var g_CREDS_CHECKED = false;
+var g_WAIT_FOR_CRED_CHECK = null;
 
 function resetAWSValues() {
   g_EC2Data = [];
@@ -329,4 +332,66 @@ function mungeEc2Data(data) {
     }
   }
   return mungedDataArr;
+}
+
+function testAWSCredentials(key, secret, region) {
+  resetCredChecks();
+  clearCredCheckInterval();
+  var ec2 = new AWS.EC2({
+    accessKeyId: key,
+    secretAccessKey: secret,
+    region: region,
+    maxRetries: 5,
+    sslEnabled: true
+  });
+  try {
+    ec2.describeRegions({}, function(err, data) {
+      if (err) {
+        console.log("BAD CREDENTIALS");
+        console.log(err, err.stack);
+        g_GOOD_CREDS = false;
+        g_CREDS_CHECKED = true;
+      } else {
+        g_GOOD_CREDS = true;
+        g_CREDS_CHECKED = true;
+      }
+    });
+  } catch (e) {
+    console.log("BAD CREDENTIALS");
+    console.log(e);
+    return false;
+    g_GOOD_CREDS = false;
+    g_CREDS_CHECKED = true;
+  }
+}
+
+function resetCredChecks() {
+  g_GOOD_CREDS = false;
+  g_CREDS_CHECKED = false;
+}
+
+function waitForCredCheck() {
+  g_WAIT_FOR_CRED_CHECK = setInterval(checkCredCheck, 1000);
+}
+
+function clearCredCheckInterval() {
+  clearInterval(g_WAIT_FOR_CRED_CHECK);
+}
+
+function checkCredCheck() {
+  if (g_CREDS_CHECKED) {
+    clearInterval(checkCredCheck);
+    resetEc2DataTable();
+    if (g_GOOD_CREDS) {
+      queryAllAWSRegionsForEC2Data(
+        getAccessKeyValue(),
+        getSecretKeyValue(),
+        getRegionValue()
+      );
+      resetCredChecks();
+    } else {
+      showCredentialsErrorDiv();
+      resetCredChecks();
+    }
+  }
 }
