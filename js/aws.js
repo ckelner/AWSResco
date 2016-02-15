@@ -336,6 +336,10 @@ function mungeEc2Data(data) {
 
 function testAWSCredentials(key, secret, region) {
   resetCredChecks();
+  if (region.toLowerCase() == "all") {
+    // pick us-east-1 should always be there
+    region = "us-east-1";
+  }
   clearCredCheckInterval();
   var ec2 = new AWS.EC2({
     accessKeyId: key,
