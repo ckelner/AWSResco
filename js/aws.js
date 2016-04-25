@@ -25,19 +25,19 @@ function resetAWSValues() {
   g_EC2DataTimer = null;
 }
 
-function queryAllAWSRegionsForEC2Data(key, secret, region) {
+function queryAllAWSRegionsForEC2Data(key, secret, token, region) {
   if (key != null && secret != null) {
     g_REGION = region;
     resetEc2DataTable();
     resetAWSValues();
     if (region.indexOf(g_ALL_Region_Const) != -1) {
       for (var i = 0; i < g_AWSRegions.length; i++) {
-        queryAWSforEC2Data(g_AWSRegions[i], key, secret, false);
-        queryAWSforEC2Data(g_AWSRegions[i], key, secret, true);
+        queryAWSforEC2Data(g_AWSRegions[i], key, secret, token, false);
+        queryAWSforEC2Data(g_AWSRegions[i], key, secret, token, true);
       }
     } else {
-      queryAWSforEC2Data(g_REGION, key, secret, false);
-      queryAWSforEC2Data(g_REGION, key, secret, true);
+      queryAWSforEC2Data(g_REGION, key, secret, token, false);
+      queryAWSforEC2Data(g_REGION, key, secret, token, true);
     }
     // Because of the asynchronous nature of the AWS SDK calls, we need to
     // wait until all data is returned for all regions before we proceed
@@ -172,10 +172,11 @@ function combineEC2AndResData(ec2, res) {
   return newRes;
 }
 
-function queryAWSforEC2Data(region, key, secret, reservations) {
+function queryAWSforEC2Data(region, key, secret, token, reservations) {
   var ec2 = new AWS.EC2({
     accessKeyId: key,
     secretAccessKey: secret,
+    sessionToken: token,
     region: region,
     maxRetries: 5,
     // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#sslEnabled-property
@@ -334,7 +335,7 @@ function mungeEc2Data(data) {
   return mungedDataArr;
 }
 
-function testAWSCredentials(key, secret, region) {
+function testAWSCredentials(key, secret, token, region) {
   resetCredChecks();
   if (region.toLowerCase() == "all") {
     // pick us-east-1 should always be there
@@ -344,6 +345,7 @@ function testAWSCredentials(key, secret, region) {
   var ec2 = new AWS.EC2({
     accessKeyId: key,
     secretAccessKey: secret,
+    sessionToken: token,
     region: region,
     maxRetries: 5,
     sslEnabled: true
@@ -390,6 +392,7 @@ function checkCredCheck() {
       queryAllAWSRegionsForEC2Data(
         getAccessKeyValue(),
         getSecretKeyValue(),
+        getTokenValue(),
         getRegionValue()
       );
       resetCredChecks();

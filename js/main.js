@@ -24,6 +24,10 @@ function getSecretKeyValue() {
   return validateKeys(document.getElementById('awsSecretKey').value);
 }
 
+function getTokenValue() {
+  return document.getElementById('awsToken').value;
+}
+
 function getRegionValue() {
   return document.getElementById('regionSelect').value;
 }
@@ -33,7 +37,7 @@ function awsQueryButtonAction() {
   showPleaseWaitDiv();
   hideAccessSecretErrorDiv();
   hideCredentialsErrorDiv();
-  testAWSCredentials(getAccessKeyValue(), getSecretKeyValue(), getRegionValue());
+  testAWSCredentials(getAccessKeyValue(), getSecretKeyValue(), getTokenValue(), getRegionValue());
   waitForCredCheck();
   // always return false to avoid page refresh
   return false;
